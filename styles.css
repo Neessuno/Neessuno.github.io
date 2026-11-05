@@ -527,7 +527,7 @@ a.mframe:hover img { filter: brightness(1.08); }
   user-select: none; -webkit-user-select: none;
 }
 .shots.is-dragging { cursor: grabbing; }
-.shots-track { display: flex; gap: 12px; width: max-content; padding: 0; will-change: transform; }
+.shots-track { display: flex; gap: 6px; width: max-content; padding: 0; will-change: transform; }
 .mitem, .mitem--wide, .mitem--photo { flex: 0 0 auto; height: var(--strip-h); margin: 0; width: auto; }
 .mframe { display: block; height: 100%; aspect-ratio: 4 / 5; border-radius: var(--radius); overflow: hidden; background: var(--surface); }
 .mframe video, .mframe img { width: 100%; height: 100%; object-fit: cover; display: block; pointer-events: none; }
@@ -551,3 +551,6 @@ a.mframe { cursor: inherit; }
 @media (max-width: 860px) { .timeline > li { grid-template-columns: minmax(0, 1fr); } }
 .shots { max-width: 100%; }
 .work-index .shots, #sim .shots { max-width: none; }
+
+/* blocco "in studio": stessa griglia, segnato da un filetto */
+.feature--study { border-top: 1px solid var(--line); padding-top: clamp(32px, 4vw, 48px); }

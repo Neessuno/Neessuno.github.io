@@ -52,7 +52,7 @@
   const byline = document.querySelector(".byline");
   const stage = document.getElementById("stage");
   const titles = [...document.querySelectorAll(".section-title")];
-  const marquees = [...document.querySelectorAll(".marquee-track")].map((el, i) => ({ el, x: 0, base: i === 0 ? 40 : 60 }));
+  const marquees = [...document.querySelectorAll(".marquee-track")].map((el, i) => ({ el, x: 0, base: i === 0 ? 26 : 32 }));
 
   let lastY = window.scrollY, vel = 0, lastT = performance.now();
 
@@ -89,7 +89,7 @@
     for (const m of marquees) {
       const half = m.el.scrollWidth / 2;
       if (!half) continue;
-      m.x -= (m.base + Math.abs(vel) * 90) * dt;
+      m.x -= (m.base + Math.min(24, Math.abs(vel) * 12)) * dt;
       if (m.x <= -half) m.x += half;
       m.el.style.transform = `translate3d(${m.x}px, 0, 0)`;
     }
@@ -280,18 +280,20 @@
   if (!strips.length) return;
   const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
   const fine = matchMedia("(hover: hover) and (pointer: fine)").matches;
-  const SPEED = 26;                                         // px al secondo
+  const SPEED = 16;                                         // px al secondo, lento
   const states = strips.map(strip => {
     const track = document.createElement("div");
     track.className = "shots-track";
     while (strip.firstChild) track.appendChild(strip.firstChild);
     strip.appendChild(track);
-    return { strip, track, items: [...track.children], x: 0, copyW: 0, visible: false, hover: false, drag: null, moved: 0 };
+    const loop = !strip.querySelector("video");             // i video non si clonano: troppi lettori bloccano i telefoni
+    return { strip, track, loop, items: [...track.children], x: 0, copyW: 0, maxX: 0, visible: false, hover: false, drag: null, moved: 0 };
   });
   if (reduced) { strips.forEach(s => s.classList.add("is-static")); return; }
 
   function setup(st) {
     st.track.querySelectorAll("[data-clone]").forEach(c => c.remove());
+    if (!st.loop) { st.maxX = Math.max(0, st.track.scrollWidth - st.strip.clientWidth); st.copyW = 1; return; }
     const first = st.items[0];
     if (!first) return;
     const gap = parseFloat(getComputedStyle(st.track).columnGap) || 12;
@@ -338,6 +340,11 @@
     const dt = Math.min(0.05, (now - last) / 1000); last = now;
     for (const st of states) {
       if (!st.visible || !st.copyW) continue;
+      if (!st.loop) {                                       // striscia ferma: solo trascinamento, entro i bordi
+        st.x = Math.min(0, Math.max(-st.maxX, st.x));
+        st.track.style.transform = `translate3d(${st.x.toFixed(1)}px, 0, 0)`;
+        continue;
+      }
       if (!st.drag && !st.hover) st.x -= SPEED * dt;
       while (st.x <= -st.copyW) { st.x += st.copyW; if (st.drag) st.drag.x0 += st.copyW; }
       while (st.x > 0) { st.x -= st.copyW; if (st.drag) st.drag.x0 -= st.copyW; }
@@ -351,7 +358,12 @@
   const vids = [...document.querySelectorAll("video[data-src]")];
   if (!vids.length) return;
   const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
-  const load = v => { if (!v.src) v.src = v.dataset.src; };
+  const small = matchMedia("(max-width: 760px)").matches || (navigator.connection && navigator.connection.saveData);
+  const load = v => {
+    if (v.src) return;
+    v.muted = true; v.playsInline = true; v.setAttribute("muted", ""); v.setAttribute("playsinline", "");
+    v.src = small ? v.dataset.src.replace(/\.mp4$/, "-sm.mp4") : v.dataset.src;
+  };
   if (reduced) { vids.forEach(v => { v.controls = true; load(v); }); return; }   // preload="none": scarica solo se premi play
   if (!("IntersectionObserver" in window)) { vids.forEach(v => { load(v); v.play().catch(() => {}); }); return; }
   const io = new IntersectionObserver(entries => {
