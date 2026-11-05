@@ -121,7 +121,7 @@ body::after { bottom: 0; background: linear-gradient(transparent, var(--bg) 80%)
 @keyframes bob { 50% { transform: translateY(5px); } }
 
 /* ===== Intro ===== */
-.intro { min-height: 80svh; display: grid; place-items: center; padding: 80px var(--gutter); }
+.intro { display: grid; place-items: center; padding: clamp(90px, 13vw, 170px) var(--gutter) clamp(70px, 9vw, 120px); }
 .intro p {
   margin: 0; max-width: 24ch; text-align: center; color: var(--ink);
   font-size: clamp(1.45rem, 3.2vw, 2.6rem); line-height: 1.3; letter-spacing: -.015em; font-weight: 500;
@@ -152,7 +152,7 @@ html.no-js-marquee .marquee-track { animation: scroll 40s linear infinite; }
 .section-note { color: var(--muted); margin: 14px 0 0; font-size: .95rem; }
 
 /* ===== Projects ===== */
-.work { padding: clamp(100px, 14vw, 180px) 0 0; }
+.work { padding: clamp(80px, 10vw, 140px) 0 0; }
 .work > .section-title, .work > .section-note { padding-inline: var(--gutter); }
 .project { padding-top: clamp(64px, 9vw, 120px); }
 .project-text { padding-inline: var(--gutter); max-width: 900px; }
@@ -189,7 +189,7 @@ html.no-drift .shots { overflow-x: auto; scrollbar-width: none; }
 .shot[data-placeholder] span { font-family: var(--mono); font-size: .75rem; color: var(--ink); opacity: .7; }
 
 /* ===== Blocks ===== */
-.block { padding: clamp(110px, 15vw, 190px) var(--gutter) 0; }
+.block { padding: clamp(90px, 11vw, 150px) var(--gutter) 0; }
 .block .section-title { margin-bottom: clamp(32px, 5vw, 60px); }
 
 .timeline { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--line); }
@@ -383,3 +383,81 @@ html.no-drift .shots { overflow-x: auto; scrollbar-width: none; }
   width: 84px; height: 84px; object-fit: cover; object-position: 50% 20%; border-radius: var(--radius); margin: 2px 0;
   box-shadow: 0 0 0 3px var(--ink), 0 6px 14px rgba(0, 0, 0, .3); pointer-events: none;
 }
+
+/* ===== Fase 2: progetti come indice ===== */
+.visually-hidden { position: absolute !important; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+.marquee--title { background: none; border: 0; -webkit-mask-image: none; mask-image: none; }
+.marquee--title li {
+  font-family: var(--display); font-weight: 400; text-transform: uppercase; color: var(--ink);
+  font-size: clamp(3.4rem, 11vw, 10rem); line-height: 1; letter-spacing: -.01em; padding: 0 .28em; gap: .56em;
+}
+.marquee--title li::after { content: "*"; color: var(--red); font-size: .7em; }
+.marquee--title li.l-en::after { color: var(--blue); }
+.work > .section-note { margin-top: 18px; }
+.work-index { margin: clamp(28px, 4vw, 48px) var(--gutter) 0; border-top: 1px solid var(--line); }
+.work-index .project { padding: clamp(26px, 3.4vw, 40px) 0; border-bottom: 1px solid var(--line); }
+.work-index .project-text {
+  display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); grid-template-areas: "title desc" "title tags";
+  gap: 14px clamp(24px, 4vw, 64px); align-items: start; max-width: none; padding: 0;
+}
+.work-index .project h3 { grid-area: title; margin: 0; font-size: clamp(1.7rem, 3.4vw, 3rem); transition: color .2s; }
+.work-index .project p { grid-area: desc; color: var(--text); }
+.work-index .tags { grid-area: tags; margin: 0; }
+.work-index .project:hover h3 { color: var(--blue); }
+@media (max-width: 760px) {
+  .work-index .project-text { grid-template-columns: 1fr; grid-template-areas: "title" "desc" "tags"; }
+}
+
+/* ===== Fase 2: competenze come elenco tipografico (niente schede) ===== */
+.modules { gap: 0; border-top: 1px solid var(--ink); }
+.module, .module:hover { background: none; border-radius: 0; padding: 22px clamp(14px, 2vw, 28px) 8px 0; }
+.module + .module { border-left: 1px solid var(--line); padding-left: clamp(14px, 2vw, 28px); }
+.module h3 { font-size: clamp(1.15rem, 1.6vw, 1.4rem); margin-bottom: 16px; }
+.module ul { font-size: 1rem; }
+.module ul li { border-top: 0; padding: 5px 0; }
+.module-foot { font-weight: 400; letter-spacing: 0; font-size: .85rem; }
+@media (max-width: 1080px) {
+  .module:nth-child(3) { border-left: 0; padding-left: 0; }
+  .module:nth-child(n+3) { border-top: 1px solid var(--line); margin-top: 18px; }
+}
+@media (max-width: 640px) {
+  .module + .module { border-left: 0; padding-left: 0; border-top: 1px solid var(--line); margin-top: 10px; }
+}
+
+/* ===== Fase 2: percorso con date grandi ===== */
+.timeline > li { grid-template-columns: minmax(0, 1fr) minmax(0, 2.3fr); gap: 12px clamp(24px, 4vw, 64px); }
+.when { font-family: var(--display); font-weight: 400; font-size: clamp(1.6rem, 2.6vw, 2.4rem); line-height: 1.05; letter-spacing: -.01em; text-transform: none; padding-top: 0; color: var(--blue); }
+.when .l-it, .when .l-en { color: var(--ink); }
+.timeline p { max-width: 78ch; }
+@media (max-width: 860px) { .timeline > li { grid-template-columns: 1fr; } }
+
+/* ritmo: competenze attaccate al percorso, respiro ampio prima dei contatti */
+#skills.block { padding-top: clamp(60px, 7vw, 100px); }
+.contact { margin-top: clamp(90px, 12vw, 170px); }
+
+/* ===== Fase 2: telefono — cobot in cima, poi il titolo (come il badge di Kenji) ===== */
+@media (max-width: 640px) {
+  .hero { display: flex; flex-direction: column; }
+  .stage { order: -1; height: 46svh; min-height: 300px; margin: 58px auto 0; }
+  .hero-top { min-height: auto; padding: 0 var(--gutter) 14svh; align-content: start; }
+  .headline { font-size: clamp(2.5rem, 11.6vw, 3.3rem); }
+  .tp-toggle { top: auto; bottom: 8px; right: 6px; }
+  .tp { position: fixed; left: 8px; right: 8px; bottom: 8px; top: auto; width: auto; max-height: 62svh; z-index: 70; }
+  .stage { transform: none !important; will-change: auto; }   /* niente parallasse: il pendant resta un pannello dal basso */
+}
+/* tablet in verticale: titolo più grande, cobot più in alto */
+@media (min-width: 641px) and (max-width: 1100px) and (orientation: portrait) {
+  .headline { font-size: min(9.2vw, 13.5svh); }
+  .hero-top { min-height: 74svh; padding-bottom: 18svh; }
+  .stage { height: 56svh; margin-top: -22svh; }
+}
+/* gallerie scorrevoli col dito e con la tastiera sui dispositivi touch */
+html.no-drift .shots-track { transform: none !important; }
+html.no-drift .shots { scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; }
+html.no-drift .shot { scroll-snap-align: start; }
+/* menu agli angoli: si nasconde mentre scorri verso il basso */
+.corner { transition: opacity .3s ease, transform .3s ease; }
+html.nav-away .corner--tc, html.nav-away .corner--tr, html.nav-away .corner--bl, html.nav-away .corner--br { opacity: 0; pointer-events: none; }
+html.nav-away .corner--tr { transform: translateY(-8px); }
+html.nav-away .corner--bl, html.nav-away .corner--br { transform: translateY(8px); }
+html.nav-away .corner--tc { transform: translate(-50%, -8px); }

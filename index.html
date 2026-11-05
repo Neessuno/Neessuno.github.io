@@ -46,7 +46,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Anton&family=Archivo:ital,wght@0,100..900;1,100..900&family=Instrument+Serif:ital@1&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=20261105143155">
+  <link rel="stylesheet" href="styles.css?v=20261105143630">
   <script type="importmap">
     { "imports": {
       "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js",
@@ -251,29 +251,34 @@
          <video src="assets/projects/01-a.mp4" autoplay muted loop playsinline></video>
          e rimuovi l'attributo data-placeholder. -->
     <section class="work" id="work">
-      <h2 class="section-title"><span class="l-it">progetti in <em class="c-red">evidenza</em></span><span class="l-en">featured <em class="c-red">works</em></span></h2>
-      <p class="section-note"><span class="l-it">I nomi dei clienti restano riservati.</span><span class="l-en">Client names stay confidential.</span></p>
+      <h2 class="visually-hidden"><span class="l-it">Progetti</span><span class="l-en">Projects</span></h2>
+      <div class="marquee marquee--title" aria-hidden="true">
+        <div class="marquee-track">
+          <ul><li class="l-it">Progetti</li><li class="l-en">Projects</li><li class="l-it">Progetti</li><li class="l-en">Projects</li><li class="l-it">Progetti</li><li class="l-en">Projects</li></ul>
+          <ul><li class="l-it">Progetti</li><li class="l-en">Projects</li><li class="l-it">Progetti</li><li class="l-en">Projects</li><li class="l-it">Progetti</li><li class="l-en">Projects</li></ul>
+        </div>
+      </div>
+      <p class="section-note"><span class="l-it">Lavori seguiti in CMA S.r.l. I nomi dei clienti restano riservati.</span><span class="l-en">Work done at CMA S.r.l. Client names stay confidential.</span></p>
+      <div class="work-index">
 
       <article class="project">
         <div class="project-text">
-          <ul class="tags"><li class="t-cream"><span class="l-it">Pallettizzazione</span><span class="l-en">Palletizing</span></li><li class="t-blue">PLC Siemens</li><li class="t-red">Profinet</li></ul>
+          <ul class="tags"><li class="t-cream"><span class="l-it">Pallettizzazione</span><span class="l-en">Palletizing</span></li><li class="t-red">PLC Siemens</li><li class="t-red">Profinet</li></ul>
           <h3><span class="l-it">Cella di pallettizzazione di fine linea</span><span class="l-en">End-of-line palletizing cell</span></h3>
-          <p class="meta">CMA S.r.l.</p>
           <p><span class="l-it">Programmazione degli schemi di pallettizzazione, gestione del cambio formato da HMI e scambio segnali con il PLC di linea, fino all'avviamento presso il cliente.</span><span class="l-en">Palletizing pattern programming, format changeover from the HMI and signal exchange with the line PLC, through to on-site start-up.</span></p>
         </div>
-        <div class="shots" tabindex="0" aria-label="Galleria foto">
+        <div class="shots" tabindex="0" aria-label="Galleria foto" hidden>
           <div class="shot" data-placeholder><span>foto</span></div><div class="shot" data-placeholder><span>foto</span></div><div class="shot" data-placeholder><span>foto</span></div><div class="shot" data-placeholder><span>foto</span></div>
         </div>
       </article>
 
       <article class="project">
         <div class="project-text">
-          <ul class="tags"><li class="t-cream">Cobot</li><li class="t-blue">Pick &amp; Place</li><li class="t-red">HMI</li></ul>
+          <ul class="tags"><li class="t-cream">Pick &amp; Place</li><li class="t-blue">Cobot</li><li class="t-red">HMI</li></ul>
           <h3><span class="l-it">Pick &amp; place con robot collaborativo</span><span class="l-en">Collaborative pick &amp; place</span></h3>
-          <p class="meta">CMA S.r.l.</p>
           <p><span class="l-it">Applicazione di prelievo e deposito con cobot, ottimizzazione delle traiettorie e dei punti di approccio per ridurre il tempo ciclo.</span><span class="l-en">Pick-and-place application with a cobot, tuning trajectories and approach points to reduce cycle time.</span></p>
         </div>
-        <div class="shots" tabindex="0" aria-label="Galleria foto">
+        <div class="shots" tabindex="0" aria-label="Galleria foto" hidden>
           <div class="shot" data-placeholder><span>foto</span></div><div class="shot" data-placeholder><span>foto</span></div><div class="shot" data-placeholder><span>foto</span></div><div class="shot" data-placeholder><span>foto</span></div>
         </div>
       </article>
@@ -282,25 +287,24 @@
         <div class="project-text">
           <ul class="tags"><li class="t-cream"><span class="l-it">Asservimento</span><span class="l-en">Machine tending</span></li><li class="t-blue"><span class="l-it">Robot industriale</span><span class="l-en">Industrial robot</span></li><li class="t-red">PLC</li></ul>
           <h3><span class="l-it">Asservimento macchina</span><span class="l-en">Machine tending cell</span></h3>
-          <p class="meta">CMA S.r.l.</p>
           <p><span class="l-it">Carico e scarico automatico della macchina, handshake con il PLC, gestione allarmi e ripresa del ciclo dopo un arresto.</span><span class="l-en">Automatic machine loading and unloading, PLC handshake, alarm handling and cycle recovery after a stop.</span></p>
         </div>
-        <div class="shots" tabindex="0" aria-label="Galleria foto">
+        <div class="shots" tabindex="0" aria-label="Galleria foto" hidden>
           <div class="shot" data-placeholder><span>foto</span></div><div class="shot" data-placeholder><span>foto</span></div><div class="shot" data-placeholder><span>foto</span></div><div class="shot" data-placeholder><span>foto</span></div>
         </div>
       </article>
 
       <article class="project">
         <div class="project-text">
-          <ul class="tags"><li class="t-cream"><span class="l-it">Movimentazione</span><span class="l-en">Material handling</span></li><li class="t-blue">EtherNet/IP</li><li class="t-red">Commissioning</li></ul>
+          <ul class="tags"><li class="t-cream"><span class="l-it">Movimentazione</span><span class="l-en">Material handling</span></li><li class="t-red">EtherNet/IP</li><li class="t-cream">Commissioning</li></ul>
           <h3><span class="l-it">Movimentazione automatizzata</span><span class="l-en">Automated material handling</span></h3>
-          <p class="meta">CMA S.r.l.</p>
           <p><span class="l-it">Trasferimento pezzi tra stazioni con integrazione dei dispositivi di campo, debug e risoluzione dei problemi software direttamente su impianto.</span><span class="l-en">Part transfer between stations with field-device integration, plus on-site debugging and software troubleshooting.</span></p>
         </div>
-        <div class="shots" tabindex="0" aria-label="Galleria foto">
+        <div class="shots" tabindex="0" aria-label="Galleria foto" hidden>
           <div class="shot" data-placeholder><span>foto</span></div><div class="shot" data-placeholder><span>foto</span></div><div class="shot" data-placeholder><span>foto</span></div><div class="shot" data-placeholder><span>foto</span></div>
         </div>
       </article>
+      </div>
     </section>
 
     <!-- ============ PERCORSO ============ -->
@@ -410,9 +414,9 @@
   </footer>
 
   <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js" defer></script>
-  <script src="main.js?v=20261105143155" defer></script>
+  <script src="main.js?v=20261105143630" defer></script>
   <script type="module">
-    const go = () => import("./cobot.js?v=20261105143155");
+    const go = () => import("./cobot.js?v=20261105143630");
     if ("requestIdleCallback" in window) requestIdleCallback(go, { timeout: 1200 }); else setTimeout(go, 300);
   </script>
 </body>

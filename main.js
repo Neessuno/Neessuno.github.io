@@ -47,6 +47,10 @@
     });
   }
 
+  /* sui dispositivi touch le gallerie si scorrono col dito, senza effetto legato allo scroll */
+  const touch = matchMedia("(hover: none), (max-width: 860px)").matches;
+  if (touch) root.classList.add("no-drift");
+
   /* gallerie: avvolgo le foto in una "track" che scorre di lato con lo scroll */
   const rows = [...document.querySelectorAll(".shots")].map((row, i) => {
     const track = document.createElement("div");
@@ -70,8 +74,13 @@
     lastT = now;
     const sy = window.scrollY, vh = window.innerHeight;
     const v = lenis ? lenis.velocity : (sy - lastY) / Math.max(dt, 1e-3) / 60;
+    const dy = sy - lastY;
     lastY = sy;
     vel += (v - vel) * 0.12;
+
+    /* menu agli angoli: via mentre scendi, torna appena risali o sei in cima */
+    if (sy < vh * 0.5 || dy < -1.5) root.classList.remove("nav-away");
+    else if (dy > 1.5) root.classList.add("nav-away");
 
     /* hero: il titolo sale più lento e si rimpicciolisce, il cobot in parallasse */
     if (sy < vh * 1.3) {
@@ -82,7 +91,7 @@
     }
 
     /* gallerie orizzontali */
-    for (const r of rows) {
+    for (const r of touch ? [] : rows) {
       const rect = r.row.getBoundingClientRect();
       if (rect.bottom < -100 || rect.top > vh + 100) continue;
       const p = clamp((vh - rect.top) / (vh + rect.height), 0, 1);
