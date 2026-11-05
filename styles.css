@@ -554,3 +554,7 @@ a.mframe { cursor: inherit; }
 
 /* blocco "in studio": stessa griglia, segnato da un filetto */
 .feature--study { border-top: 1px solid var(--line); padding-top: clamp(32px, 4vw, 48px); }
+/* GIF del robottino tra le parentesi: un po' più grande perché ha margini trasparenti */
+.slot .g--img { object-fit: contain; transform: scale(1.3); }
+.slot .g--img[hidden] { display: none; }
+.slot.is-out .g--img { transform: scale(.5) rotate(-14deg); }

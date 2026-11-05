@@ -46,7 +46,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Anton&family=Archivo:ital,wght@0,100..900;1,100..900&family=Instrument+Serif:ital@1&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=20261105154731">
+  <link rel="stylesheet" href="styles.css?v=20261105155458">
   <script type="importmap">
     { "imports": {
       "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js",
@@ -178,13 +178,13 @@
       <div class="hero-top">
       <h1 class="headline">
         <span class="l-it">
-          <span class="ln">insegnare ai <span class="paren" aria-hidden="true"><span class="pp">(</span><span class="slot" data-set="cobot gripper pendant plc"><svg class="g" viewBox="0 0 48 48"><use href="#g-cobot"/></svg></span><span class="pp">)</span></span> <em class="c-red">robot</em></span>
+          <span class="ln">insegnare ai <span class="paren" aria-hidden="true"><span class="pp">(</span><span class="slot" data-set="cobot robot gripper pendant plc"><svg class="g" viewBox="0 0 48 48"><use href="#g-cobot"/></svg><img class="g g--img" src="assets/robot.gif" width="424" height="411" alt="" decoding="async" hidden></span><span class="pp">)</span></span> <em class="c-red">robot</em></span>
           <span class="ln">a muoversi è il <em class="c-blue">mestiere.</em></span>
           <span class="ln"><em class="c-red">limare</em> <span class="paren" aria-hidden="true"><span class="pp">(</span><span class="slot" data-set="watch gear pallet bolt"><svg class="g" viewBox="0 0 48 48"><use href="#g-watch"/></svg></span><span class="pp">)</span></span> millisecondi</span>
           <span class="ln">è il <em class="c-blue">bonus</em></span>
         </span>
         <span class="l-en">
-          <span class="ln">teaching <span class="paren" aria-hidden="true"><span class="pp">(</span><span class="slot" data-set="cobot gripper pendant plc"><svg class="g" viewBox="0 0 48 48"><use href="#g-cobot"/></svg></span><span class="pp">)</span></span> <em class="c-red">robots</em></span>
+          <span class="ln">teaching <span class="paren" aria-hidden="true"><span class="pp">(</span><span class="slot" data-set="cobot robot gripper pendant plc"><svg class="g" viewBox="0 0 48 48"><use href="#g-cobot"/></svg><img class="g g--img" src="assets/robot.gif" width="424" height="411" alt="" decoding="async" hidden></span><span class="pp">)</span></span> <em class="c-red">robots</em></span>
           <span class="ln">to move is the <em class="c-blue">job.</em></span>
           <span class="ln"><em class="c-red">shaving</em> <span class="paren" aria-hidden="true"><span class="pp">(</span><span class="slot" data-set="watch gear pallet bolt"><svg class="g" viewBox="0 0 48 48"><use href="#g-watch"/></svg></span><span class="pp">)</span></span> milliseconds</span>
           <span class="ln">is the <em class="c-blue">bonus</em></span>
@@ -457,9 +457,9 @@
   </footer>
 
   <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js" defer></script>
-  <script src="main.js?v=20261105154731" defer></script>
+  <script src="main.js?v=20261105155458" defer></script>
   <script type="module">
-    const go = () => import("./cobot.js?v=20261105154731");
+    const go = () => import("./cobot.js?v=20261105155458");
     if ("requestIdleCallback" in window) requestIdleCallback(go, { timeout: 1200 }); else setTimeout(go, 300);
   </script>
 </body>

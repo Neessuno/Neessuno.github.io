@@ -106,7 +106,7 @@
 /* ===== Illustrazioni tra parentesi che ruotano (come Kenji) ===== */
 (() => {
   if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-  const WIDTH = { cobot: .95, gripper: .95, pendant: 1.05, plc: 1.05, watch: .92, gear: .95, pallet: 1.05, bolt: .9 };
+  const WIDTH = { cobot: .95, robot: 1, gripper: .95, pendant: 1.05, plc: 1.05, watch: .92, gear: .95, pallet: 1.05, bolt: .9 };
   const slots = [...document.querySelectorAll(".slot[data-set]")];
   slots.forEach((slot, i) => {
     const set = slot.dataset.set.split(" ");
@@ -117,7 +117,9 @@
       k = (k + 1) % set.length;
       slot.classList.add("is-out");
       setTimeout(() => {
-        use.setAttribute("href", "#g-" + set[k]);
+        const gif = slot.querySelector(".g--img"), svg = slot.querySelector("svg.g");
+        if (set[k] === "robot" && gif) { gif.hidden = false; svg.style.display = "none"; }   // robottino animato (GIF)
+        else { if (gif) gif.hidden = true; svg.style.display = ""; use.setAttribute("href", "#g-" + set[k]); }
         slot.style.width = (WIDTH[set[k]] || .95) + "em";
         slot.classList.remove("is-out");
       }, 200);
