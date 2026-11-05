@@ -117,10 +117,33 @@
   requestAnimationFrame(raf);
 })();
 
+/* ===== Illustrazioni tra parentesi che ruotano (come Kenji) ===== */
+(() => {
+  if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  const WIDTH = { cobot: .95, gripper: .95, pendant: 1.05, plc: 1.05, watch: .92, gear: .95, pallet: 1.05, bolt: .9 };
+  const slots = [...document.querySelectorAll(".slot[data-set]")];
+  slots.forEach((slot, i) => {
+    const set = slot.dataset.set.split(" ");
+    const use = slot.querySelector("use");
+    let k = 0;
+    setTimeout(() => setInterval(() => {
+      if (document.hidden) return;
+      k = (k + 1) % set.length;
+      slot.classList.add("is-out");
+      setTimeout(() => {
+        use.setAttribute("href", "#g-" + set[k]);
+        slot.style.width = (WIDTH[set[k]] || .95) + "em";
+        slot.classList.remove("is-out");
+      }, 200);
+    }, 2400), 900 + (i % 2) * 1200);
+  });
+})();
+
 /* ===== Cursore personalizzato ===== */
 (() => {
   const dot = document.querySelector(".cursor");
   if (!dot || !matchMedia("(hover: hover) and (pointer: fine)").matches) return;
+  document.documentElement.classList.add("has-cursor");
   let x = -100, y = -100, cx = -100, cy = -100;
   window.addEventListener("pointermove", e => {
     x = e.clientX; y = e.clientY;

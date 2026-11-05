@@ -91,9 +91,12 @@ body::after { bottom: 0; background: linear-gradient(transparent, var(--bg) 80%)
   color: var(--ink);
 }
 .headline .ln { display: block; }
-.paren { display: inline-flex; align-items: center; gap: .04em; font-weight: 400; }
-.paren .g { width: .95em; height: .95em; transition: transform .5s cubic-bezier(.3, 1.6, .5, 1); }
-.headline:hover .paren .g { transform: rotate(-10deg) scale(1.08); }
+.paren { display: inline-flex; align-items: center; gap: .02em; }
+.pp { font-family: var(--sans); font-weight: 200; color: var(--ink); font-size: .92em; transform: translateY(-.03em); }
+.slot { position: relative; display: inline-block; width: .95em; height: .95em; vertical-align: -.12em; transition: width .42s cubic-bezier(.22, 1, .36, 1); }
+.slot .g { position: absolute; inset: 0; width: 100%; height: 100%; transition: transform .45s cubic-bezier(.3, 1.6, .5, 1), opacity .2s ease; }
+.slot.is-out .g { transform: scale(.4) rotate(-14deg); opacity: 0; transition: transform .2s ease-in, opacity .2s ease-in; }
+.headline:hover .slot .g { transform: rotate(-8deg) scale(1.08); }
 .headline, .stage, .section-title { will-change: transform; }
 .byline { color: var(--muted); margin: 18px 0 0; text-align: center; }
 
@@ -287,3 +290,8 @@ html.no-drift .shots { overflow-x: auto; scrollbar-width: none; }
 .cursor.is-on { opacity: 1; }
 .cursor.is-link { width: 46px; height: 46px; margin: -23px 0 0 -23px; background: color-mix(in srgb, var(--blue) 25%, transparent); border: 1.5px solid var(--blue); }
 @media (hover: none), (pointer: coarse) { .cursor { display: none; } }
+
+/* Cursore di sistema nascosto: resta solo il pallino */
+@media (hover: hover) and (pointer: fine) {
+  html.has-cursor, html.has-cursor * { cursor: none !important; }
+}
