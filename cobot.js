@@ -373,17 +373,6 @@ function init() {
   /* ---------- Controllo: mouse, teach pendant, saluto e sguardo legati allo scroll ---------- */
   const deg = r => (r * 180) / Math.PI;
   let mode = "auto", estop = false;
-  const pointer = { x: 0, y: 0, last: -1e9 };
-  window.addEventListener("pointermove", e => {
-    if (mode !== "auto" || (e.target.closest && e.target.closest(".tp, .tp-toggle"))) return;
-    const hr = hero.getBoundingClientRect();
-    if (e.clientY < hr.top || e.clientY > hr.bottom) return;
-    const r = stage.getBoundingClientRect();
-    pointer.x = clamp((e.clientX - (r.left + r.width / 2)) / (r.width / 2), -1, 1);
-    pointer.y = clamp((e.clientY - (r.top + r.height * 0.45)) / (r.height / 2), -1, 1);
-    pointer.last = performance.now();
-  }, { passive: true });
-
   // torni in cima → il cobot saluta; scorri nella hero → guarda verso i contenuti
   let armed = false, waveT0 = -1e9, lastScroll = -1e9;
   window.addEventListener("scroll", () => {
@@ -468,7 +457,7 @@ function init() {
     if (estop) state = "E-STOP";
     else if (mode === "manual") state = "MAN";
     else if (now - waveT0 < 2200) state = "HELLO";
-    else state = w > 0.5 ? "FOLLOW" : "AUTO";
+    else state = "AUTO";
     if (hudMode) hudMode.textContent = state;
     if (led) { led.classList.toggle("is-follow", state !== "AUTO" && state !== "E-STOP"); led.classList.toggle("is-stop", estop); }
     if (tpState) {
@@ -522,8 +511,7 @@ function init() {
 
     const waving = mode === "auto" && now - waveT0 < 2200;
     const looking = mode === "auto" && !waving && now - lastScroll < 900;
-    const following = mode === "auto" && !waving && !looking && now - pointer.last < 1600;
-    const engaged = mode === "manual" || waving || looking || following;
+    const engaged = mode === "manual" || waving || looking;
     w += ((engaged ? 1 : 0) - w) * (1 - Math.exp(-dt * (engaged ? 3.2 : 2.2)));
     if (w < 0.02) runCycle(dt);
     updateWorld(dt);
@@ -538,8 +526,7 @@ function init() {
         qFT[4] += Math.sin(t * 9) * 0.6 * env;          // rollio del polso: ciao!
         qFT[3] -= 0.3 * env;
         k = 6;
-      } else if (looking) lookTarget(0, 0.9);
-      else lookTarget(pointer.x, pointer.y);
+      } else lookTarget(0, 0.9);
       const kk = 1 - Math.exp(-dt * k);
       for (let i = 0; i < 6; i++) qF[i] += (qFT[i] - qF[i]) * kk;
     }
@@ -554,7 +541,6 @@ function init() {
     for (let i = 0; i < 6; i++) q[i] = lerp(qC[i], qF[i], ws);
     applyJoints(q);
 
-    camAz += ((following ? pointer.x * 0.1 * ws : 0) - camAz) * (1 - Math.exp(-dt * 2));
     placeCamera();
     updateHud(dt, now);
     renderer.render(scene, camera);
