@@ -412,12 +412,12 @@ function init() {
   const deg = r => (r * 180) / Math.PI;
   let mode = "auto", estop = false;
   // torni in cima → il cobot saluta; scorri nella hero → guarda verso i contenuti
-  let armed = false, waveT0 = -1e9, lastScroll = -1e9;
+  // saluta al caricamento della pagina e ogni volta che torni in cima
+  let armed = false, waveT0 = performance.now() + 700;
   window.addEventListener("scroll", () => {
     const y = window.scrollY, vh = window.innerHeight;
     if (y > vh * 0.7) armed = true;
     if (armed && y < 30) { armed = false; waveT0 = performance.now(); }
-    if (y > vh * 0.04 && y < vh * 1.1) lastScroll = performance.now();
   }, { passive: true });
 
   const qF = qC.slice(), qFT = new Array(6), q = qC.slice(), qM = qC.slice();
@@ -514,7 +514,7 @@ function init() {
     outs.forEach((el, i) => { el.textContent = toHud(src, i).toFixed(1) + "°"; });
     if (estop) state = "E-STOP";
     else if (mode === "manual") state = "MAN";
-    else if (now - waveT0 < 2200) state = "HELLO";
+    else if (now >= waveT0 && now - waveT0 < 2200) state = "HELLO";
     else state = "AUTO";
     if (tpState) {
       tpState.textContent = state;
@@ -566,9 +566,8 @@ function init() {
     if (estop) { updateHud(dt, now); return; }           // arresto: tutto fermo
     jogStep(dt);
 
-    const waving = mode === "auto" && now - waveT0 < 2200;
-    const looking = mode === "auto" && !waving && now - lastScroll < 900;
-    const engaged = mode === "manual" || waving || looking;
+    const waving = mode === "auto" && now >= waveT0 && now - waveT0 < 2200;
+    const engaged = mode === "manual" || waving;
     w += ((engaged ? 1 : 0) - w) * (1 - Math.exp(-dt * (engaged ? 3.2 : 2.2)));
     if (w < 0.02) runCycle(dt);
     updateWorld(dt);
@@ -583,7 +582,7 @@ function init() {
         qFT[4] += Math.sin(t * 9) * 0.6 * env;          // rollio del polso: ciao!
         qFT[3] -= 0.3 * env;
         k = 6;
-      } else lookTarget(0, 0.9);
+      } else { for (let i = 0; i < 6; i++) qFT[i] = qF[i]; }   // fine del saluto: si torna dolcemente al ciclo
       const kk = 1 - Math.exp(-dt * k);
       for (let i = 0; i < 6; i++) qF[i] += (qFT[i] - qF[i]) * kk;
     }
