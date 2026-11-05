@@ -180,18 +180,48 @@ function init() {
   const j6 = new THREE.Group(); j6.position.y = FL; j5.add(j6);
   j6.add(at(mesh(cyl(0.06, 0.064, 0.026, 48), mat.alu), 0, 0.013, 0));
   j6.add(at(mesh(cyl(0.05, 0.05, 0.012, 48), mat.dark), 0, 0.032, 0));
-  j6.add(at(mesh(new RoundedBoxGeometry(0.21, 0.09, 0.1, 3, 0.02), mat.dark), 0, 0.087, 0));
-  j6.add(at(mesh(new THREE.BoxGeometry(0.24, 0.016, 0.03), mat.alu), 0, 0.135, 0));
+  /* Utensile 1: pinza a due dita */
+  const gripperTool = new THREE.Group(); j6.add(gripperTool);
+  gripperTool.add(at(mesh(new RoundedBoxGeometry(0.21, 0.09, 0.1, 3, 0.02), mat.dark), 0, 0.087, 0));
+  gripperTool.add(at(mesh(new THREE.BoxGeometry(0.24, 0.016, 0.03), mat.alu), 0, 0.135, 0));
   function finger(side) {
     const f = new THREE.Group();
     f.add(at(mesh(new RoundedBoxGeometry(0.025, 0.15, 0.06, 2, 0.006), mat.alu), 0, 0.2, 0));
     f.add(at(mesh(new THREE.BoxGeometry(0.008, 0.07, 0.052), mat.red), -side * 0.016, 0.235, 0));
-    j6.add(f);
+    gripperTool.add(f);
     return f;
   }
   const fingerL = finger(-1), fingerR = finger(1);
+
+  /* Utensile 2: mano robotica (4 dita da un lato, pollice opposto, 3 falangi ciascuno) */
+  const handTool = new THREE.Group(); handTool.visible = false; j6.add(handTool);
+  handTool.add(at(mesh(cyl(0.05, 0.058, 0.05, 40), mat.white), 0, 0.055, 0));                   // polsino
+  handTool.add(at(mesh(cyl(0.059, 0.059, 0.012, 40), mat.led, false), 0, 0.072, 0));            // anello LED
+  handTool.add(at(mesh(new RoundedBoxGeometry(0.22, 0.05, 0.15, 3, 0.022), mat.white), 0, 0.104, 0)); // dorso
+  handTool.add(at(mesh(new RoundedBoxGeometry(0.205, 0.012, 0.138, 2, 0.005), mat.dark), 0, 0.132, 0)); // palmo in gomma
+  const handFingers = [];
+  function handFinger(x, z, side, lens, thick) {
+    const base = new THREE.Group(); base.position.set(x, 0.124, z); handTool.add(base);
+    base.add(mesh(new THREE.SphereGeometry(thick * 0.62, 18, 12), mat.dark));
+    const segs = [];
+    let parent = base;
+    lens.forEach((L, i) => {
+      const seg = new THREE.Group();
+      if (i > 0) { seg.position.y = lens[i - 1]; seg.add(mesh(new THREE.SphereGeometry(thick * 0.56, 14, 10), mat.dark)); }
+      seg.add(at(mesh(new RoundedBoxGeometry(thick, L * 0.94, thick, 2, thick * 0.32), mat.white), 0, L / 2, 0));
+      parent.add(seg); segs.push(seg); parent = seg;
+    });
+    const tip = lens[lens.length - 1];
+    segs[segs.length - 1].add(at(mesh(new THREE.BoxGeometry(0.006, tip * 0.7, thick * 0.82), mat.red), -side * thick * 0.5, tip * 0.55, 0)); // polpastrello
+    handFingers.push({ segs, side });
+  }
+  for (const z of [-0.054, -0.018, 0.018, 0.054]) handFinger(0.125, z, 1, [0.06, 0.045, 0.036], 0.024);
+  handFinger(-0.127, 0, -1, [0.052, 0.046, 0.04], 0.03);                                         // pollice
+
   const OPEN = 0.155, CLOSED = 0.1225;
   let grip = OPEN;
+  let tool = "gripper";
+  function setTool(t) { tool = t; gripperTool.visible = t === "gripper"; handTool.visible = t === "hand"; }
 
   // q = [J1, angolo assoluto braccio, gomito (relativo), polso (relativo), rollio, J6]
   function applyJoints(q) {
@@ -203,6 +233,14 @@ function init() {
     j6.rotation.y = q[5];
     fingerL.position.x = -grip;
     fingerR.position.x = grip;
+    if (handTool.visible) {
+      const c = clamp((OPEN - grip) / (OPEN - CLOSED), 0, 1);          // 0 aperta → 1 chiusa
+      for (const f of handFingers) {
+        f.segs[0].rotation.z = f.side * lerp(-0.55, -0.02, c);
+        f.segs[1].rotation.z = f.side * lerp(0.05, 0.06, c);
+        f.segs[2].rotation.z = f.side * lerp(0.05, 0.1, c);
+      }
+    }
   }
 
   /* ---------- Cinematica inversa ---------- */
@@ -392,32 +430,38 @@ function init() {
     qFT[5] = px * 0.5;
   }
 
-  /* Teach pendant */
+  /* Teach pendant: selettore a chiave, jog ± tenendo premuto, override velocità, utensile */
   const tp = document.getElementById("tp"), tpToggle = document.getElementById("tp-toggle");
   const tpState = document.getElementById("tp-state"), tpEstop = document.getElementById("tp-estop");
-  const modeBtns = tp ? [...tp.querySelectorAll("[data-mode]")] : [];
-  const sliders = tp ? [...tp.querySelectorAll("[data-jog]")] : [];
+  const tpKey = document.getElementById("tp-key");
+  const jogBtns = tp ? [...tp.querySelectorAll("[data-jog]")] : [];
+  const outs = tp ? [...tp.querySelectorAll("[data-out]")] : [];
+  const speedBtns = tp ? [...tp.querySelectorAll("[data-speed]")] : [];
+  const toolBtns = tp ? [...tp.querySelectorAll("[data-tool]")] : [];
   const gripBtn = document.getElementById("tp-grip"), homeBtn = document.getElementById("tp-home");
+  const toolLabel = document.getElementById("tp-tool"), speedLabel = document.getElementById("tp-speed");
   const toHud = (qq, i) => [deg(qq[0]), deg(qq[1]) - 90, deg(qq[2]), deg(qq[3]) - 180, deg(qq[4]), deg(qq[5])][i];
-  const fromHud = (v, i) => ((i === 1 ? v + 90 : i === 3 ? v + 180 : v) * Math.PI) / 180;
-  function syncSliders() {
-    sliders.forEach((s, i) => { const v = toHud(qM, i); s.value = v; s.nextElementSibling.textContent = v.toFixed(1) + "°"; });
+  const jog = [0, 0, 0, 0, 0, 0];
+  let speed = 0.5;
+  const JOG_MAX = (60 * Math.PI) / 180;                                  // 60°/s al 100%
+
+  function refreshControls() {
+    const man = mode === "manual" && !estop;
+    jogBtns.forEach(b => (b.disabled = !man));
+    if (homeBtn) homeBtn.disabled = !man;
+    if (gripBtn) gripBtn.disabled = !man || !!carried;
+    if (tpKey) { tpKey.setAttribute("aria-checked", String(mode === "manual")); tpKey.disabled = estop; }
   }
   function setMode(m) {
     if (estop || m === mode) return;
     mode = m;
-    const man = m === "manual";
-    modeBtns.forEach(b => b.setAttribute("aria-pressed", String(b.dataset.mode === m)));
-    sliders.forEach(s => (s.disabled = !man));
-    if (homeBtn) homeBtn.disabled = !man;
-    if (gripBtn) gripBtn.disabled = !man || !!carried;
-    if (man) {
-      for (let i = 0; i < 6; i++) qM[i] = q[i];
-      gripRestore = grip; gripTarget = grip;
-      syncSliders();
-    } else {
-      gripTarget = null;                    // la pinza torna com'era nel ciclo
-    }
+    if (m === "manual") { for (let i = 0; i < 6; i++) qM[i] = q[i]; gripRestore = grip; gripTarget = grip; }
+    else { gripTarget = null; jog.fill(0); }
+    refreshControls();
+  }
+  function jogStep(dt) {
+    if (mode !== "manual") return;
+    for (let i = 0; i < 6; i++) if (jog[i]) qM[i] += jog[i] * JOG_MAX * speed * dt;
   }
   if (tp && tpToggle) {
     tpToggle.addEventListener("click", () => {
@@ -426,40 +470,52 @@ function init() {
       tpToggle.setAttribute("aria-expanded", String(open));
       if (!open) setMode("auto");
     });
-    modeBtns.forEach(b => b.addEventListener("click", () => setMode(b.dataset.mode)));
-    sliders.forEach((s, i) => s.addEventListener("input", () => {
-      qM[i] = fromHud(parseFloat(s.value), i);
-      s.nextElementSibling.textContent = parseFloat(s.value).toFixed(1) + "°";
+    tpKey && tpKey.addEventListener("click", () => setMode(mode === "manual" ? "auto" : "manual"));
+    jogBtns.forEach(b => {
+      const i = +b.dataset.jog, dir = +b.dataset.dir;
+      const stop = () => { jog[i] = 0; b.classList.remove("is-held"); };
+      b.addEventListener("pointerdown", e => { if (b.disabled) return; jog[i] = dir; b.classList.add("is-held"); b.setPointerCapture(e.pointerId); });
+      b.addEventListener("pointerup", stop);
+      b.addEventListener("pointercancel", stop);
+      b.addEventListener("lostpointercapture", stop);
+      b.addEventListener("click", e => { if (e.detail === 0 && mode === "manual") qM[i] += dir * (2 * Math.PI) / 180; }); // tastiera: passo di 2°
+    });
+    speedBtns.forEach(b => b.addEventListener("click", () => {
+      speed = +b.dataset.speed;
+      speedBtns.forEach(x => x.setAttribute("aria-pressed", String(x === b)));
+      if (speedLabel) speedLabel.textContent = Math.round(speed * 100) + "%";
     }));
-    homeBtn && homeBtn.addEventListener("click", () => { ik(aP, 0, 0, qM); syncSliders(); });
+    toolBtns.forEach(b => b.addEventListener("click", () => {
+      setTool(b.dataset.tool);
+      toolBtns.forEach(x => x.setAttribute("aria-pressed", String(x === b)));
+      if (toolLabel) toolLabel.innerHTML = b.innerHTML;
+    }));
+    homeBtn && homeBtn.addEventListener("click", () => ik(aP, 0, 0, qM));
     gripBtn && gripBtn.addEventListener("click", () => {
       gripTarget = (gripTarget ?? grip) > (OPEN + CLOSED) / 2 ? CLOSED : OPEN;
     });
     tpEstop && tpEstop.addEventListener("click", () => {
       estop = !estop;
       tpEstop.setAttribute("aria-pressed", String(estop));
-      modeBtns.forEach(b => (b.disabled = estop));
-      sliders.forEach(s => (s.disabled = estop || mode !== "manual"));
+      jog.fill(0);
+      refreshControls();
       updateHud(1, performance.now());
     });
+    refreshControls();
   }
 
-  /* ---------- HUD ---------- */
-  const hudJ = [...document.querySelectorAll("[data-j]")];
-  const hudMode = document.getElementById("hud-mode");
-  const led = document.querySelector(".hud .led");
+  /* ---------- Stato e valori dei giunti sul display del pendant ---------- */
   let hudT = 0, state = "AUTO";
   function updateHud(dt, now) {
     hudT += dt;
     if (hudT < 0.08) return;
     hudT = 0;
-    hudJ.forEach((el, i) => { el.textContent = toHud(q, i).toFixed(1); });
+    const src = mode === "manual" ? qM : q;
+    outs.forEach((el, i) => { el.textContent = toHud(src, i).toFixed(1) + "°"; });
     if (estop) state = "E-STOP";
     else if (mode === "manual") state = "MAN";
     else if (now - waveT0 < 2200) state = "HELLO";
     else state = "AUTO";
-    if (hudMode) hudMode.textContent = state;
-    if (led) { led.classList.toggle("is-follow", state !== "AUTO" && state !== "E-STOP"); led.classList.toggle("is-stop", estop); }
     if (tpState) {
       tpState.textContent = state;
       tpState.classList.toggle("is-man", mode === "manual" && !estop);
@@ -508,6 +564,7 @@ function init() {
     last = now;
     if (!visible || document.hidden) return;
     if (estop) { updateHud(dt, now); return; }           // arresto: tutto fermo
+    jogStep(dt);
 
     const waving = mode === "auto" && now - waveT0 < 2200;
     const looking = mode === "auto" && !waving && now - lastScroll < 900;
