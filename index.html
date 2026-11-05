@@ -30,7 +30,7 @@
     "@type": "Person",
     "name": "Matteo Capitano",
     "url": "https://neessuno.github.io/",
-    "image": "https://neessuno.github.io/assets/og.png",
+    "image": "https://neessuno.github.io/assets/avatar.png",
     "jobTitle": "Robotics & Industrial Automation Software Specialist",
     "worksFor": { "@type": "Organization", "name": "CMA S.r.l." },
     "address": { "@type": "PostalAddress", "addressLocality": "Napoli", "addressCountry": "IT" },
@@ -42,10 +42,11 @@
   }
   </script>
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="assets/avatar-face.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Anton&family=Archivo:ital,wght@0,100..900;1,100..900&family=Instrument+Serif:ital@1&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=20261105112755">
+  <link rel="stylesheet" href="styles.css?v=20261105141225">
   <script type="importmap">
     { "imports": {
       "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js",
@@ -162,13 +163,7 @@
 
   <!-- ============ NAV AGLI ANGOLI (come Kenji) ============ -->
   <a href="#top" class="corner corner--tl logo" aria-label="Matteo Capitano — home">
-    <svg viewBox="0 0 48 48" aria-hidden="true">
-      <circle cx="24" cy="24" r="23" class="logo-bg"/>
-      <rect x="15" y="9" width="18" height="9" rx="2" class="logo-body"/>
-      <rect x="21" y="18" width="6" height="5" class="logo-body"/>
-      <path d="M13 23h22v4H31v12h-5V27h-4v12h-5V27h-4z" class="logo-body"/>
-      <circle cx="24" cy="13.5" r="2.4" class="logo-dot"/>
-    </svg>
+    <img src="assets/avatar-face.png" width="56" height="56" alt="">
   </a>
   <div class="corner corner--tc lang-toggle mono" role="group" aria-label="Lingua / Language">
     <button type="button" data-lang="it" aria-pressed="true">IT</button><span aria-hidden="true">/</span><button type="button" data-lang="en" aria-pressed="false">EN</button>
@@ -234,8 +229,8 @@
 
     <!-- ============ INTRO ============ -->
     <section class="intro" id="intro">
-      <p class="l-it"><span class="c-red">*</span> Ciao, sono Matteo. Programmo <span class="c-red">robot industriali</span> e <span class="c-blue">cobot</span>: celle di pallettizzazione, pick &amp; place, asservimento macchina. Le scrivo in ufficio e poi le porto <span class="serif">sull'impianto del cliente</span>, finché non girano come devono. Lavoro in <span class="c-red">CMA</span>, e ogni tanto passo dall'altra parte del bancone: in <span class="c-blue">fiera</span> per l'azienda, o in trasferta fino in <span class="c-red">Cina</span>. Fai come a <span class="pill">casa</span>!</p>
-      <p class="l-en"><span class="c-red">*</span> Hi, I'm Matteo. I program <span class="c-red">industrial robots</span> and <span class="c-blue">cobots</span>: palletizing, pick &amp; place and machine tending cells. I write them at the desk, then take them <span class="serif">to the customer's plant</span> and stay until they run right. I work at <span class="c-red">CMA</span>, and now and then I switch sides: at <span class="c-blue">trade fairs</span> for the company, or on business trips as far as <span class="c-red">China</span>. Make yourself at <span class="pill">home</span>!</p>
+      <p class="l-it"><span class="c-red">*</span> Ciao, sono Matteo <img class="inline-avatar" src="assets/avatar-face.png" width="48" height="48" alt="">. Programmo <span class="c-red">robot industriali</span> e <span class="c-blue">cobot</span>: celle di pallettizzazione, pick &amp; place, asservimento macchina. Le scrivo in ufficio e poi le porto <span class="serif">sull'impianto del cliente</span>, finché non girano come devono. Lavoro in <span class="c-red">CMA</span>, e ogni tanto passo dall'altra parte del bancone: in <span class="c-blue">fiera</span> per l'azienda, o in trasferta fino in <span class="c-red">Cina</span>. Fai come a <span class="pill">casa</span>!</p>
+      <p class="l-en"><span class="c-red">*</span> Hi, I'm Matteo <img class="inline-avatar" src="assets/avatar-face.png" width="48" height="48" alt="">. I program <span class="c-red">industrial robots</span> and <span class="c-blue">cobots</span>: palletizing, pick &amp; place and machine tending cells. I write them at the desk, then take them <span class="serif">to the customer's plant</span> and stay until they run right. I work at <span class="c-red">CMA</span>, and now and then I switch sides: at <span class="c-blue">trade fairs</span> for the company, or on business trips as far as <span class="c-red">China</span>. Make yourself at <span class="pill">home</span>!</p>
     </section>
 
     <!-- ============ MARQUEE ============ -->
@@ -392,7 +387,7 @@
       <div class="badge" id="badge">
         <span class="badge-hole"></span>
         <span class="badge-top mono">EXHIBITOR</span>
-        <svg class="badge-glyph" viewBox="0 0 48 48"><use href="#g-cobot"/></svg>
+        <img class="badge-photo" src="assets/avatar.png" width="96" height="96" alt="" draggable="false">
         <span class="badge-name">Matteo<br>Capitano</span>
         <span class="badge-role mono">Robotics Specialist<br>CMA S.r.l.</span>
         <span class="badge-bars"></span>
@@ -415,9 +410,9 @@
   </footer>
 
   <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js" defer></script>
-  <script src="main.js?v=20261105112755" defer></script>
+  <script src="main.js?v=20261105141225" defer></script>
   <script type="module">
-    const go = () => import("./cobot.js?v=20261105112755");
+    const go = () => import("./cobot.js?v=20261105141225");
     if ("requestIdleCallback" in window) requestIdleCallback(go, { timeout: 1200 }); else setTimeout(go, 300);
   </script>
 </body>
