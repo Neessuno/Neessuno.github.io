@@ -48,8 +48,9 @@
   }
 
   /* sui dispositivi touch le gallerie si scorrono col dito, senza effetto legato allo scroll */
-  const touch = matchMedia("(hover: none), (max-width: 860px)").matches;
-  if (touch) root.classList.add("no-drift");
+  // le gallerie ora sono a griglia: niente scorrimento laterale legato allo scroll
+  const touch = true;
+  root.classList.add("no-drift");
 
   /* gallerie: avvolgo le foto in una "track" che scorre di lato con lo scroll */
   const rows = [...document.querySelectorAll(".shots")].map((row, i) => {
