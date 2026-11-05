@@ -9,7 +9,7 @@
   :root { --ink: #0B0B0C; --muted: #5d5b55; --line: #dcd9cf; --red: #E0482C; --blue: #2F6FE0; --cream: #F6F3E4; }
   * { box-sizing: border-box; }
   html, body { margin: 0; }
-  body { font-family: "Inter Tight", system-ui, sans-serif; color: var(--ink); font-size: 8.9pt; line-height: 1.4; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  body { font-family: "Inter Tight", system-ui, sans-serif; color: var(--ink); font-size: 8.7pt; line-height: 1.38; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
   .page { width: 210mm; min-height: 297mm; padding: 12mm 14mm 14mm; position: relative; }
   .mono { font-family: "JetBrains Mono", monospace; font-size: 7.6pt; letter-spacing: .03em; }
   header { display: grid; grid-template-columns: 1fr auto; gap: 8mm; align-items: end; padding-bottom: 5mm; border-bottom: 2px solid var(--ink); }
@@ -32,8 +32,8 @@
   ul { margin: 0; padding-left: 4mm; }
   li { margin: .4mm 0; }
   li::marker { color: var(--red); }
-  aside .block { background: var(--cream); border-radius: 3mm; padding: 3.2mm 3.6mm; }
-  aside .block + .block { margin-top: 3mm; }
+  aside .block { background: var(--cream); border-radius: 3mm; padding: 2.7mm 3.4mm; }
+  aside .block + .block { margin-top: 2.4mm; }
   aside h2 { font-size: 9.4pt; }
   .tags { display: flex; flex-wrap: wrap; gap: 1.4mm; }
   .tags span { border: 1px solid var(--ink); border-radius: 99px; padding: .6mm 2.2mm; font-size: 8pt; }
@@ -73,6 +73,8 @@
             <li>Celle di pallettizzazione, pick &amp; place, asservimento macchina e movimentazione automatizzata.</li>
             <li>Integrazione con PLC Siemens, HMI e dispositivi di campo tramite Profinet ed EtherNet/IP.</li>
             <li>Commissioning presso i clienti, supporto all'avviamento e risoluzione di problemi software direttamente su impianto.</li>
+            <li>Simulazioni in RobotStudio per verificare raggiungibilità, collisioni, fattibilità e tempo ciclo prima della costruzione.</li>
+            <li>Sviluppo di add-in per FlexPendant ABB, tra cui un'applicazione di pallettizzazione automatica per l'operatore.</li>
           </ul>
         </div>
         <div class="job">
@@ -115,7 +117,7 @@
       </div>
       <div class="block">
         <h2>Software</h2>
-        <div class="tags"><span>C++ (base)</span><span>Python (base)</span><span>VS Code</span><span>AutoCAD 2D/3D</span><span>SolidWorks (base)</span><span>MS Office</span></div>
+        <div class="tags"><span class="on">RobotStudio (simulazione)</span><span class="on">Add-in FlexPendant</span><span>C++ (base)</span><span>Python (base)</span><span>VS Code</span><span>AutoCAD 2D/3D</span><span>SolidWorks (base)</span><span>MS Office</span></div>
       </div>
       <div class="block">
         <h2>Lingue</h2>

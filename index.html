@@ -38,7 +38,7 @@
     "alumniOf": { "@type": "EducationalOrganization", "name": "ITS Luigi Galvani" },
     "sameAs": ["https://www.linkedin.com/in/matteo-capitano-5b0aa3318/"],
     "knowsLanguage": ["it", "en"],
-    "knowsAbout": ["Industrial robot programming", "Collaborative robots", "ABB RobotStudio", "Palletizing", "Pick and place", "Machine tending", "Siemens S7-1200", "TIA Portal", "Profinet", "EtherNet/IP", "Commissioning"]
+    "knowsAbout": ["Industrial robot programming", "Collaborative robots", "ABB RobotStudio", "Palletizing", "Pick and place", "Machine tending", "Siemens S7-1200", "TIA Portal", "Profinet", "EtherNet/IP", "Commissioning", "RobotStudio simulation", "FlexPendant add-in development"]
   }
   </script>
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
@@ -46,7 +46,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Anton&family=Archivo:ital,wght@0,100..900;1,100..900&family=Instrument+Serif:ital@1&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=20261105144749">
+  <link rel="stylesheet" href="styles.css?v=20261105145851">
   <script type="importmap">
     { "imports": {
       "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js",
@@ -276,8 +276,8 @@
           <h3><span class="l-it">Cella di pallettizzazione di fine linea</span><span class="l-en">End-of-line palletizing cell</span></h3>
           <p><span class="l-it">Programmazione degli schemi di pallettizzazione, gestione del cambio formato da HMI e scambio segnali con il PLC di linea, fino all'avviamento presso il cliente.</span><span class="l-en">Palletizing pattern programming, format changeover from the HMI and signal exchange with the line PLC, through to on-site start-up.</span></p>
         </div>
-        <div class="shots" tabindex="0" aria-label="Galleria foto" hidden>
-          <div class="shot" data-placeholder><span>foto</span></div><div class="shot" data-placeholder><span>foto</span></div><div class="shot" data-placeholder><span>foto</span></div><div class="shot" data-placeholder><span>foto</span></div>
+        <div class="shots" tabindex="0" aria-label="Galleria">
+          <figure class="mitem"><div class="mframe"><video muted loop playsinline preload="none" poster="assets/media/pallet-linea.jpg" data-src="assets/media/pallet-linea.mp4" aria-label="Linea di pallettizzazione con cobot"></video></div><figcaption><span class="l-it">Linea di pallettizzazione con cobot</span><span class="l-en">Cobot palletizing line</span></figcaption></figure><figure class="mitem"><div class="mframe"><video muted loop playsinline preload="none" poster="assets/media/pallet-cobot.jpg" data-src="assets/media/pallet-cobot.mp4" aria-label="Cobot che deposita le scatole"></video></div><figcaption><span class="l-it">Cobot che deposita le scatole</span><span class="l-en">Cobot placing boxes</span></figcaption></figure>
         </div>
       </article>
 
@@ -287,8 +287,8 @@
           <h3><span class="l-it">Pick &amp; place con robot collaborativo</span><span class="l-en">Collaborative pick &amp; place</span></h3>
           <p><span class="l-it">Applicazione di prelievo e deposito con cobot, ottimizzazione delle traiettorie e dei punti di approccio per ridurre il tempo ciclo.</span><span class="l-en">Pick-and-place application with a cobot, tuning trajectories and approach points to reduce cycle time.</span></p>
         </div>
-        <div class="shots" tabindex="0" aria-label="Galleria foto" hidden>
-          <div class="shot" data-placeholder><span>foto</span></div><div class="shot" data-placeholder><span>foto</span></div><div class="shot" data-placeholder><span>foto</span></div><div class="shot" data-placeholder><span>foto</span></div>
+        <div class="shots" tabindex="0" aria-label="Galleria">
+          <figure class="mitem"><div class="mframe"><video muted loop playsinline preload="none" poster="assets/media/pick-cobot.jpg" data-src="assets/media/pick-cobot.mp4" aria-label="Pick &amp; place con ventosa"></video></div><figcaption><span class="l-it">Pick &amp; place con ventosa</span><span class="l-en">Vacuum pick &amp; place</span></figcaption></figure>
         </div>
       </article>
 
@@ -298,8 +298,8 @@
           <h3><span class="l-it">Asservimento macchina</span><span class="l-en">Machine tending cell</span></h3>
           <p><span class="l-it">Carico e scarico automatico della macchina, handshake con il PLC, gestione allarmi e ripresa del ciclo dopo un arresto.</span><span class="l-en">Automatic machine loading and unloading, PLC handshake, alarm handling and cycle recovery after a stop.</span></p>
         </div>
-        <div class="shots" tabindex="0" aria-label="Galleria foto" hidden>
-          <div class="shot" data-placeholder><span>foto</span></div><div class="shot" data-placeholder><span>foto</span></div><div class="shot" data-placeholder><span>foto</span></div><div class="shot" data-placeholder><span>foto</span></div>
+        <div class="shots" tabindex="0" aria-label="Galleria">
+          <figure class="mitem"><div class="mframe"><video muted loop playsinline preload="none" poster="assets/media/asservimento-linea.jpg" data-src="assets/media/asservimento-linea.mp4" aria-label="Robot in linea di confezionamento"></video></div><figcaption><span class="l-it">Robot in linea di confezionamento</span><span class="l-en">Robots on a packaging line</span></figcaption></figure>
         </div>
       </article>
 
@@ -309,11 +309,38 @@
           <h3><span class="l-it">Movimentazione automatizzata</span><span class="l-en">Automated material handling</span></h3>
           <p><span class="l-it">Trasferimento pezzi tra stazioni con integrazione dei dispositivi di campo, debug e risoluzione dei problemi software direttamente su impianto.</span><span class="l-en">Part transfer between stations with field-device integration, plus on-site debugging and software troubleshooting.</span></p>
         </div>
-        <div class="shots" tabindex="0" aria-label="Galleria foto" hidden>
-          <div class="shot" data-placeholder><span>foto</span></div><div class="shot" data-placeholder><span>foto</span></div><div class="shot" data-placeholder><span>foto</span></div><div class="shot" data-placeholder><span>foto</span></div>
+        <div class="shots" tabindex="0" aria-label="Galleria">
+          <figure class="mitem"><div class="mframe"><video muted loop playsinline preload="none" poster="assets/media/bicchieri-transfer.jpg" data-src="assets/media/bicchieri-transfer.mp4" aria-label="Trasferimento dei bicchieri"></video></div><figcaption><span class="l-it">Trasferimento dei bicchieri</span><span class="l-en">Cup transfer</span></figcaption></figure><figure class="mitem"><div class="mframe"><video muted loop playsinline preload="none" poster="assets/media/bicchieri-presa.jpg" data-src="assets/media/bicchieri-presa.mp4" aria-label="Presa pneumatica"></video></div><figcaption><span class="l-it">Presa pneumatica</span><span class="l-en">Pneumatic gripping</span></figcaption></figure><figure class="mitem"><div class="mframe"><video muted loop playsinline preload="none" poster="assets/media/bicchieri-pile.jpg" data-src="assets/media/bicchieri-pile.mp4" aria-label="Pile pronte e HMI"></video></div><figcaption><span class="l-it">Pile pronte e HMI</span><span class="l-en">Finished stacks and HMI</span></figcaption></figure>
         </div>
       </article>
       </div>
+    </section>
+
+    <!-- ============ SIMULAZIONI E SOFTWARE ============ -->
+    <section class="block" id="sim">
+      <h2 class="section-title"><span class="l-it">simulazioni e <em class="c-blue">software</em></span><span class="l-en">simulation &amp; <em class="c-blue">software</em></span></h2>
+
+      <article class="feature">
+        <div class="feature-text">
+          <h3><span class="l-it">Fattibilità e raggiungibilità in RobotStudio</span><span class="l-en">Feasibility and reach studies in RobotStudio</span></h3>
+          <p><span class="l-it">Prima di costruire una cella la simulo: controllo che il robot arrivi a tutti i punti di presa e deposito, che non ci siano collisioni con pallet, nastri e strutture, e stimo il tempo ciclo. I segnali di I/O e la logica sono collegati come sull'impianto vero, così il programma arriva in officina già provato.</span><span class="l-en">Before a cell is built I simulate it: I check that the robot reaches every pick and place point, that nothing collides with pallets, conveyors and frames, and I estimate cycle time. I/O signals and logic are wired as on the real plant, so the program reaches the workshop already tested.</span></p>
+          <ul class="tags"><li class="t-blue">RobotStudio</li><li class="t-cream"><span class="l-it">Raggiungibilità</span><span class="l-en">Reach</span></li><li class="t-cream"><span class="l-it">Tempo ciclo</span><span class="l-en">Cycle time</span></li><li class="t-red"><span class="l-it">Segnali I/O</span><span class="l-en">I/O signals</span></li></ul>
+        </div>
+        <div class="shots" tabindex="0" aria-label="Galleria simulazioni">
+          <figure class="mitem mitem--wide"><a class="mframe" href="assets/media/sim-trasporto.jpg" target="_blank" rel="noopener"><img src="assets/media/sim-trasporto.jpg" loading="lazy" alt="Simulazione: trasporto verso il pallet"></a><figcaption><span class="l-it">Simulazione: trasporto verso il pallet</span><span class="l-en">Simulation: transfer to the pallet</span></figcaption></figure><figure class="mitem mitem--wide"><a class="mframe" href="assets/media/sim-prelievo.jpg" target="_blank" rel="noopener"><img src="assets/media/sim-prelievo.jpg" loading="lazy" alt="Simulazione: prelievo dal nastro"></a><figcaption><span class="l-it">Simulazione: prelievo dal nastro</span><span class="l-en">Simulation: picking from the conveyor</span></figcaption></figure><figure class="mitem mitem--wide"><a class="mframe" href="assets/media/sim-presa.jpg" target="_blank" rel="noopener"><img src="assets/media/sim-presa.jpg" loading="lazy" alt="Simulazione: presa con la pinza"></a><figcaption><span class="l-it">Simulazione: presa con la pinza</span><span class="l-en">Simulation: gripping</span></figcaption></figure>
+        </div>
+      </article>
+
+      <article class="feature">
+        <div class="feature-text">
+          <h3><span class="l-it">Add-in per FlexPendant: pallettizzazione automatica</span><span class="l-en">FlexPendant add-in: automatic palletizing</span></h3>
+          <p><span class="l-it">Sviluppo add-in personalizzati per il teach pendant ABB. Questo, realizzato in CMA, permette all'operatore di creare un nuovo formato senza toccare il codice: dimensioni di prodotto e pallet, schemi di strato generati in automatico o ritoccati a mano, anteprima 3D della pila, verifica sul robot, statistiche di produzione, allarmi con ripristino guidato, messa in servizio passo passo e copie di sicurezza.</span><span class="l-en">I build custom add-ins for the ABB teach pendant. This one, made at CMA, lets operators create a new format without touching code: product and pallet sizes, layer patterns generated automatically or tweaked by hand, 3D stack preview, a check on the robot, production statistics, alarms with guided recovery, step-by-step commissioning and backups.</span></p>
+          <ul class="tags"><li class="t-blue">FlexPendant</li><li class="t-cream"><span class="l-it">Pallettizzazione</span><span class="l-en">Palletizing</span></li><li class="t-cream">HMI</li><li class="t-red">RAPID</li></ul>
+        </div>
+        <div class="shots" tabindex="0" aria-label="Schermate dell'add-in">
+          <figure class="mitem mitem--wide"><a class="mframe" href="assets/media/addin-panoramica.jpg" target="_blank" rel="noopener"><img src="assets/media/addin-panoramica.jpg" loading="lazy" alt="Panoramica: stato dei due pallet e dei segnali"></a><figcaption><span class="l-it">Panoramica: stato dei due pallet e dei segnali</span><span class="l-en">Overview: both pallets and I/O status</span></figcaption></figure><figure class="mitem mitem--wide"><a class="mframe" href="assets/media/addin-schemi_strato.jpg" target="_blank" rel="noopener"><img src="assets/media/addin-schemi_strato.jpg" loading="lazy" alt="Schemi di strato generati in automatico o a mano"></a><figcaption><span class="l-it">Schemi di strato generati in automatico o a mano</span><span class="l-en">Layer patterns, automatic or manual</span></figcaption></figure><figure class="mitem mitem--wide"><a class="mframe" href="assets/media/addin-strati_3d.jpg" target="_blank" rel="noopener"><img src="assets/media/addin-strati_3d.jpg" loading="lazy" alt="Composizione del pallet con anteprima 3D"></a><figcaption><span class="l-it">Composizione del pallet con anteprima 3D</span><span class="l-en">Pallet build-up with 3D preview</span></figcaption></figure><figure class="mitem mitem--wide"><a class="mframe" href="assets/media/addin-riepilogo.jpg" target="_blank" rel="noopener"><img src="assets/media/addin-riepilogo.jpg" loading="lazy" alt="Riepilogo del formato e verifica sul robot"></a><figcaption><span class="l-it">Riepilogo del formato e verifica sul robot</span><span class="l-en">Format summary and robot check</span></figcaption></figure><figure class="mitem mitem--wide"><a class="mframe" href="assets/media/addin-statistiche.jpg" target="_blank" rel="noopener"><img src="assets/media/addin-statistiche.jpg" loading="lazy" alt="Statistiche di produzione per turno"></a><figcaption><span class="l-it">Statistiche di produzione per turno</span><span class="l-en">Production statistics per shift</span></figcaption></figure><figure class="mitem mitem--wide"><a class="mframe" href="assets/media/addin-allarmi.jpg" target="_blank" rel="noopener"><img src="assets/media/addin-allarmi.jpg" loading="lazy" alt="Allarmi con ripristino guidato"></a><figcaption><span class="l-it">Allarmi con ripristino guidato</span><span class="l-en">Alarms with guided recovery</span></figcaption></figure><figure class="mitem mitem--wide"><a class="mframe" href="assets/media/addin-pinze.jpg" target="_blank" rel="noopener"><img src="assets/media/addin-pinze.jpg" loading="lazy" alt="Archivio pinze e TCP"></a><figcaption><span class="l-it">Archivio pinze e TCP</span><span class="l-en">Gripper and TCP library</span></figcaption></figure><figure class="mitem mitem--wide"><a class="mframe" href="assets/media/addin-messa_in_servizio.jpg" target="_blank" rel="noopener"><img src="assets/media/addin-messa_in_servizio.jpg" loading="lazy" alt="Procedura di messa in servizio"></a><figcaption><span class="l-it">Procedura di messa in servizio</span><span class="l-en">Commissioning wizard</span></figcaption></figure>
+        </div>
+      </article>
     </section>
 
     <!-- ============ PERCORSO ============ -->
@@ -339,6 +366,7 @@
               <li><b><span class="l-it">Fiere di settore</span><span class="l-en">Industry trade fairs</span></b>: <span class="l-it">presenza allo stand dell'azienda e demo per i visitatori.</span><span class="l-en">staffing the company booth and running demos for visitors.</span></li>
               <li><b><span class="l-it">Missione in Cina</span><span class="l-en">Business trip to China</span></b>: <span class="l-it">trasferta con l'azienda per incontrare produttori e fornitori.</span><span class="l-en">company trip to meet manufacturers and suppliers.</span></li>
             </ul>
+            <div class="trip"><figure class="mitem"><a class="mframe" href="assets/media/cina-fiera.jpg" target="_blank" rel="noopener"><img src="assets/media/cina-fiera.jpg" loading="lazy" alt="In fiera durante la trasferta in Cina"></a><figcaption><span class="l-it">In fiera durante la trasferta in Cina</span><span class="l-en">At a trade fair during the China trip</span></figcaption></figure><figure class="mitem"><a class="mframe" href="assets/media/cina-shanghai.jpg" target="_blank" rel="noopener"><img src="assets/media/cina-shanghai.jpg" loading="lazy" alt="Shanghai di sera"></a><figcaption><span class="l-it">Shanghai di sera</span><span class="l-en">Shanghai at night</span></figcaption></figure></div>
           </div>
         </li>
         <li>
@@ -379,7 +407,7 @@
         </div>
         <div class="module">
           <h3><span class="l-it">Software e progettazione</span><span class="l-en">Software &amp; design</span></h3>
-          <ul><li>C++, Python <span class="l-it">(base)</span><span class="l-en">(basic)</span></li><li>Visual Studio Code</li><li>AutoCAD 2D/3D</li><li>SolidWorks <span class="l-it">(base)</span><span class="l-en">(basic)</span></li></ul>
+          <ul><li>C++, Python <span class="l-it">(base)</span><span class="l-en">(basic)</span></li><li>Visual Studio Code</li><li><span class="l-it">RobotStudio: simulazione e fattibilità</span><span class="l-en">RobotStudio: simulation and feasibility</span></li><li><span class="l-it">Add-in per FlexPendant</span><span class="l-en">FlexPendant add-ins</span></li><li>AutoCAD 2D/3D</li><li>SolidWorks <span class="l-it">(base)</span><span class="l-en">(basic)</span></li></ul>
         </div>
         <div class="module">
           <h3><span class="l-it">Lingue</span><span class="l-en">Languages</span></h3>
@@ -423,9 +451,9 @@
   </footer>
 
   <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js" defer></script>
-  <script src="main.js?v=20261105144749" defer></script>
+  <script src="main.js?v=20261105145851" defer></script>
   <script type="module">
-    const go = () => import("./cobot.js?v=20261105144749");
+    const go = () => import("./cobot.js?v=20261105145851");
     if ("requestIdleCallback" in window) requestIdleCallback(go, { timeout: 1200 }); else setTimeout(go, 300);
   </script>
 </body>

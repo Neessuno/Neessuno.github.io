@@ -487,3 +487,35 @@ html.nav-away .corner--tc { transform: translate(-50%, -8px); }
 @media (max-width: 640px) {
   body:has(#tp:not([hidden])) .corner--bl, body:has(#tp:not([hidden])) .corner--br { opacity: 0; pointer-events: none; }
 }
+
+/* ===== Media: video e immagini nelle gallerie ===== */
+.shots { margin-top: 24px; }
+.mitem { flex: 0 0 clamp(150px, 15vw, 220px); margin: 0; scroll-snap-align: start; }
+.mitem--wide { flex-basis: clamp(280px, 42vw, 600px); }
+.mframe {
+  display: block; position: relative; overflow: hidden; border-radius: var(--radius);
+  aspect-ratio: 9 / 16; background: var(--surface);
+}
+.mitem--wide .mframe { aspect-ratio: 16 / 10; }
+.mframe video, .mframe img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.mitem--wide .mframe img { object-fit: cover; object-position: top center; }
+a.mframe { cursor: zoom-in; }
+a.mframe:hover img { filter: brightness(1.08); }
+.mitem figcaption { margin-top: 8px; font-size: .82rem; color: var(--muted); line-height: 1.35; }
+.work-index .shots { margin: 22px calc(var(--gutter) * -1) 0; }
+.work-index .shots-track { padding-inline: var(--gutter); }
+
+/* ===== Simulazioni e software ===== */
+.feature + .feature { margin-top: clamp(56px, 7vw, 96px); }
+.feature-text { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr); grid-template-areas: "title desc" "title tags"; gap: 14px clamp(24px, 4vw, 64px); align-items: start; }
+.feature-text h3 { grid-area: title; margin: 0; font-family: var(--sans); font-weight: 700; color: var(--ink); font-size: clamp(1.6rem, 3vw, 2.6rem); line-height: 1.05; letter-spacing: -.02em; }
+.feature-text p { grid-area: desc; margin: 0; max-width: 70ch; }
+.feature-text .tags { grid-area: tags; margin: 0; }
+#sim .shots { margin-inline: calc(var(--gutter) * -1); }
+#sim .shots-track { padding-inline: var(--gutter); }
+@media (max-width: 760px) { .feature-text { grid-template-columns: 1fr; grid-template-areas: "title" "desc" "tags"; } }
+
+/* foto della trasferta nel percorso */
+.trip { display: grid; grid-template-columns: minmax(0, .62fr) minmax(0, 1fr); gap: 12px; margin-top: 18px; max-width: 640px; }
+.trip .mframe { aspect-ratio: auto; height: clamp(180px, 22vw, 280px); }
+.trip .mitem { flex: none; }

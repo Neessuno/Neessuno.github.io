@@ -296,3 +296,21 @@
   }
   requestAnimationFrame(loop);
 })();
+
+/* ===== Video: si caricano e partono solo quando sono visibili ===== */
+(() => {
+  const vids = [...document.querySelectorAll("video[data-src]")];
+  if (!vids.length) return;
+  const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const load = v => { if (!v.src) v.src = v.dataset.src; };
+  if (reduced) { vids.forEach(v => { v.controls = true; load(v); }); return; }   // preload="none": scarica solo se premi play
+  if (!("IntersectionObserver" in window)) { vids.forEach(v => { load(v); v.play().catch(() => {}); }); return; }
+  const io = new IntersectionObserver(entries => {
+    for (const e of entries) {
+      const v = e.target;
+      if (e.isIntersecting) { load(v); v.play().catch(() => {}); }
+      else if (!v.paused) v.pause();
+    }
+  }, { rootMargin: "200px 0px" });
+  vids.forEach(v => io.observe(v));
+})();
