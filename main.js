@@ -47,20 +47,6 @@
     });
   }
 
-  /* sui dispositivi touch le gallerie si scorrono col dito, senza effetto legato allo scroll */
-  // le gallerie ora sono a griglia: niente scorrimento laterale legato allo scroll
-  const touch = true;
-  root.classList.add("no-drift");
-
-  /* gallerie: avvolgo le foto in una "track" che scorre di lato con lo scroll */
-  const rows = [...document.querySelectorAll(".shots")].map((row, i) => {
-    const track = document.createElement("div");
-    track.className = "shots-track";
-    while (row.firstChild) track.appendChild(row.firstChild);
-    row.appendChild(track);
-    return { row, track, dir: i % 2 ? 1 : -1 };
-  });
-
   const hero = document.querySelector(".hero");
   const headline = document.querySelector(".headline");
   const byline = document.querySelector(".byline");
@@ -89,16 +75,6 @@
       headline.style.transform = `translate3d(0, ${p * vh * 0.28}px, 0) scale(${1 - p * 0.12})`;
       if (byline) byline.style.transform = `translate3d(0, ${p * vh * 0.22}px, 0)`;
       stage.style.transform = `translate3d(0, ${p * vh * 0.12}px, 0)`;
-    }
-
-    /* gallerie orizzontali */
-    for (const r of touch ? [] : rows) {
-      const rect = r.row.getBoundingClientRect();
-      if (rect.bottom < -100 || rect.top > vh + 100) continue;
-      const p = clamp((vh - rect.top) / (vh + rect.height), 0, 1);
-      const max = Math.max(0, r.track.scrollWidth - r.row.clientWidth);
-      const x = r.dir < 0 ? -p * max : -(1 - p) * max;
-      r.track.style.transform = `translate3d(${x}px, 0, 0)`;
     }
 
     /* titoli di sezione: leggero scorrimento laterale */
@@ -296,6 +272,78 @@
     if (!drag && Math.abs(b.x - b.px) + Math.abs(b.y - b.py) < 0.02) running = false;
   }
   requestAnimationFrame(loop);
+})();
+
+/* ===== Strisce di immagini e video: loop continuo, pausa al passaggio, trascinabili ===== */
+(() => {
+  const strips = [...document.querySelectorAll(".shots")];
+  if (!strips.length) return;
+  const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const fine = matchMedia("(hover: hover) and (pointer: fine)").matches;
+  const SPEED = 26;                                         // px al secondo
+  const states = strips.map(strip => {
+    const track = document.createElement("div");
+    track.className = "shots-track";
+    while (strip.firstChild) track.appendChild(strip.firstChild);
+    strip.appendChild(track);
+    return { strip, track, items: [...track.children], x: 0, copyW: 0, visible: false, hover: false, drag: null, moved: 0 };
+  });
+  if (reduced) { strips.forEach(s => s.classList.add("is-static")); return; }
+
+  function setup(st) {
+    st.track.querySelectorAll("[data-clone]").forEach(c => c.remove());
+    const first = st.items[0];
+    if (!first) return;
+    const gap = parseFloat(getComputedStyle(st.track).columnGap) || 12;
+    const copyW = st.items.reduce((w, it) => w + it.getBoundingClientRect().width + gap, 0);
+    if (!copyW) return;
+    const copies = Math.max(1, Math.ceil((st.strip.clientWidth + copyW) / copyW));
+    for (let c = 0; c < copies; c++) st.items.forEach(it => {
+      const k = it.cloneNode(true);
+      k.setAttribute("data-clone", ""); k.setAttribute("aria-hidden", "true");
+      k.querySelectorAll("a").forEach(a => (a.tabIndex = -1));
+      st.track.appendChild(k);
+    });
+    st.copyW = copyW;
+  }
+  const setupAll = () => states.forEach(setup);
+  setupAll();
+  window.addEventListener("load", setupAll);
+  let rt; window.addEventListener("resize", () => { clearTimeout(rt); rt = setTimeout(setupAll, 200); });
+
+  const io = new IntersectionObserver(es => es.forEach(e => {
+    const st = states.find(s => s.strip === e.target); if (st) st.visible = e.isIntersecting;
+  }), { rootMargin: "100px 0px" });
+  states.forEach(st => {
+    io.observe(st.strip);
+    const s = st.strip;
+    if (fine) { s.addEventListener("pointerenter", () => (st.hover = true)); s.addEventListener("pointerleave", () => (st.hover = false)); }
+    s.addEventListener("pointerdown", e => {
+      st.drag = { id: e.pointerId, sx: e.clientX, x0: st.x }; st.moved = 0;
+      try { s.setPointerCapture(e.pointerId); } catch (_) {} s.classList.add("is-dragging");
+    });
+    s.addEventListener("pointermove", e => {
+      if (!st.drag || e.pointerId !== st.drag.id) return;
+      const dx = e.clientX - st.drag.sx; st.moved = Math.max(st.moved, Math.abs(dx));
+      st.x = st.drag.x0 + dx;
+    });
+    const end = () => { st.drag = null; s.classList.remove("is-dragging"); };
+    s.addEventListener("pointerup", end); s.addEventListener("pointercancel", end);
+    s.addEventListener("click", e => { if (st.moved > 6) { e.preventDefault(); e.stopPropagation(); } }, true);  // trascinare non apre le foto
+  });
+
+  let last = performance.now();
+  (function loop(now) {
+    requestAnimationFrame(loop);
+    const dt = Math.min(0.05, (now - last) / 1000); last = now;
+    for (const st of states) {
+      if (!st.visible || !st.copyW) continue;
+      if (!st.drag && !st.hover) st.x -= SPEED * dt;
+      while (st.x <= -st.copyW) { st.x += st.copyW; if (st.drag) st.drag.x0 += st.copyW; }
+      while (st.x > 0) { st.x -= st.copyW; if (st.drag) st.drag.x0 -= st.copyW; }
+      st.track.style.transform = `translate3d(${st.x.toFixed(1)}px, 0, 0)`;
+    }
+  })(last);
 })();
 
 /* ===== Video: si caricano e partono solo quando sono visibili ===== */

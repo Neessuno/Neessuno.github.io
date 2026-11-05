@@ -474,7 +474,6 @@ html.no-drift .shots { overflow-x: auto; scrollbar-width: none; }
   .stage { height: 56svh; margin-top: -22svh; }
 }
 /* gallerie scorrevoli col dito e con la tastiera sui dispositivi touch */
-html.no-drift .shots-track { transform: none !important; }
 html.no-drift .shots { scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; }
 html.no-drift .shot { scroll-snap-align: start; }
 /* menu agli angoli: si nasconde mentre scorri verso il basso */
@@ -520,17 +519,35 @@ a.mframe:hover img { filter: brightness(1.08); }
 .trip .mframe { aspect-ratio: auto; height: clamp(180px, 22vw, 280px); }
 .trip .mitem { flex: none; }
 
-/* ===== Gallerie a griglia: tutto visibile, niente scorrimento laterale ===== */
-.shots, .work-index .shots, #sim .shots { overflow: visible; margin: 24px 0 0; scroll-snap-type: none; }
-.shots-track, .work-index .shots-track, #sim .shots-track {
-  display: grid; width: auto; padding: 0; transform: none !important; gap: 16px 14px;
-  grid-template-columns: repeat(auto-fill, minmax(150px, 210px));
+
+/* ===== Strisce di immagini come Kenji: loop continuo, trascinabili, niente didascalie ===== */
+.shots {
+  --strip-h: clamp(250px, 46svh, 420px);
+  overflow: hidden; margin: 26px 0 0; padding: 0; cursor: grab; touch-action: pan-y;
+  user-select: none; -webkit-user-select: none;
 }
-#sim .shots-track { grid-template-columns: repeat(auto-fill, minmax(min(100%, 380px), 1fr)); gap: 22px 18px; }
-.mitem, .mitem--wide { flex: none; width: auto; }
-.mitem--wide .mframe { aspect-ratio: auto; background: #fff; }
-.mitem--wide .mframe img { height: auto; object-fit: contain; }
+.shots.is-dragging { cursor: grabbing; }
+.shots-track { display: flex; gap: 12px; width: max-content; padding: 0; will-change: transform; }
+.mitem, .mitem--wide, .mitem--photo { flex: 0 0 auto; height: var(--strip-h); margin: 0; width: auto; }
+.mframe { display: block; height: 100%; aspect-ratio: 4 / 5; border-radius: var(--radius); overflow: hidden; background: var(--surface); }
+.mframe video, .mframe img { width: 100%; height: 100%; object-fit: cover; display: block; pointer-events: none; }
+.mitem--wide .mframe, .mitem--photo .mframe { aspect-ratio: auto; background: #fff; }
+.mitem--wide .mframe img, .mitem--photo .mframe img { width: auto; height: 100%; object-fit: contain; }
+.mitem--photo .mframe { background: var(--surface); }
+a.mframe { cursor: inherit; }
+.work-index .shots, #sim .shots { margin-inline: calc(var(--gutter) * -1); }
+.work-index .shots-track, #sim .shots-track { padding-inline: 0; }
+#sim .shots { --strip-h: clamp(220px, 40svh, 380px); }
+.shots--trip { --strip-h: clamp(190px, 30svh, 290px); margin-top: 20px; }
+/* senza animazioni: scorrimento manuale */
+.shots.is-static { overflow-x: auto; cursor: auto; scrollbar-width: thin; }
 @media (max-width: 640px) {
-  .shots-track, .work-index .shots-track { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  #sim .shots-track { grid-template-columns: 1fr; }
+  .shots { --strip-h: 300px; }
+  #sim .shots { --strip-h: 210px; }
+  .shots--trip { --strip-h: 200px; }
 }
+/* le strisce dentro il percorso non devono allargare la colonna */
+.timeline > li > div { min-width: 0; }
+@media (max-width: 860px) { .timeline > li { grid-template-columns: minmax(0, 1fr); } }
+.shots { max-width: 100%; }
+.work-index .shots, #sim .shots { max-width: none; }
