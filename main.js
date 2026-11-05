@@ -103,26 +103,21 @@
   requestAnimationFrame(raf);
 })();
 
-/* ===== Illustrazioni tra parentesi che ruotano (come Kenji) ===== */
+/* ===== GIF tra parentesi che si alternano (come Kenji) ===== */
 (() => {
-  if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-  const WIDTH = { cobot: .95, robot: 1, gripper: .95, pendant: 1.05, plc: 1.05, watch: .92, gear: .95, pallet: 1.05, bolt: .9 };
   const slots = [...document.querySelectorAll(".slot[data-set]")];
+  const names = [...new Set(slots.flatMap(s => s.dataset.set.split(" ")))];
+  names.forEach(n => { const i = new Image(); i.src = `assets/gif/${n}.gif`; });   // precarico: niente vuoti al cambio
+  if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
   slots.forEach((slot, i) => {
     const set = slot.dataset.set.split(" ");
-    const use = slot.querySelector("use");
+    const img = slot.querySelector("img");
     let k = 0;
     setTimeout(() => setInterval(() => {
       if (document.hidden) return;
       k = (k + 1) % set.length;
       slot.classList.add("is-out");
-      setTimeout(() => {
-        const gif = slot.querySelector(".g--img"), svg = slot.querySelector("svg.g");
-        if (set[k] === "robot" && gif) { gif.hidden = false; svg.style.display = "none"; }   // robottino animato (GIF)
-        else { if (gif) gif.hidden = true; svg.style.display = ""; use.setAttribute("href", "#g-" + set[k]); }
-        slot.style.width = (WIDTH[set[k]] || .95) + "em";
-        slot.classList.remove("is-out");
-      }, 200);
+      setTimeout(() => { img.src = `assets/gif/${set[k]}.gif`; slot.classList.remove("is-out"); }, 200);
     }, 2400), 900 + (i % 2) * 1200);
   });
 })();

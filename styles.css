@@ -283,14 +283,14 @@ html.no-drift .shots { overflow-x: auto; scrollbar-width: none; }
   width: 64px; height: 64px; padding: 0; border: 0; background: none; cursor: pointer;
   animation: tpBounce 2.4s cubic-bezier(.3, 0, .3, 1) infinite;
 }
-.tp-toggle svg {
+.tp-toggle svg, .tp-toggle img {
   width: 100%; height: 100%; display: block;
   filter: drop-shadow(0 8px 14px rgba(76, 141, 255, .35));
   transition: transform .35s cubic-bezier(.3, 1.6, .5, 1);
 }
-.tp-toggle:hover svg, .tp-toggle:focus-visible svg { transform: scale(1.18) rotate(-10deg); }
+.tp-toggle:hover svg, .tp-toggle:focus-visible svg, .tp-toggle:hover img, .tp-toggle:focus-visible img { transform: scale(1.18) rotate(-10deg); }
 .tp-toggle:hover, .tp-toggle[aria-expanded="true"] { animation-play-state: paused; }
-.tp-toggle[aria-expanded="true"] svg { transform: scale(1.08) rotate(6deg); }
+.tp-toggle[aria-expanded="true"] svg, .tp-toggle[aria-expanded="true"] img { transform: scale(1.08) rotate(6deg); }
 .tp-ping {
   position: absolute; top: 4px; right: 2px; width: 12px; height: 12px; border-radius: 50%;
   background: var(--red); border: 2px solid var(--bg);
@@ -556,5 +556,7 @@ a.mframe { cursor: inherit; }
 .feature--study { border-top: 1px solid var(--line); padding-top: clamp(32px, 4vw, 48px); }
 /* GIF del robottino tra le parentesi: un po' più grande perché ha margini trasparenti */
 .slot .g--img { object-fit: contain; transform: scale(1.3); }
-.slot .g--img[hidden] { display: none; }
 .slot.is-out .g--img { transform: scale(.5) rotate(-14deg); }
+
+.tp-toggle img { object-fit: contain; transform-origin: 50% 60%; }
+.tp-toggle { width: 72px; height: 72px; }

@@ -46,7 +46,9 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Anton&family=Archivo:ital,wght@0,100..900;1,100..900&family=Instrument+Serif:ital@1&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=20261105155458">
+  <link rel="preload" as="image" href="assets/gif/cobot.gif">
+  <link rel="preload" as="image" href="assets/gif/laptop.gif">
+  <link rel="stylesheet" href="styles.css?v=20261105195610">
   <script type="importmap">
     { "imports": {
       "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js",
@@ -55,108 +57,6 @@
   </script>
 </head>
 <body>
-  <!-- Sprite delle illustrazioni tra parentesi (ruotano come nel sito di Kenji) -->
-  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
-    <!-- cobot -->
-    <symbol id="g-cobot" viewBox="0 0 48 48">
-      <rect x="12" y="41.5" width="20" height="4" rx="1.4" fill="#6F7378"/>
-      <rect x="16.5" y="30" width="11" height="12.5" rx="3" fill="#9A9DA2"/>
-      <rect x="16.5" y="30" width="3.2" height="12.5" rx="1.6" fill="#B7BABE"/>
-      <path d="M22 29 L29.5 12.5" stroke="#A3A6AA" stroke-width="7" stroke-linecap="round"/>
-      <path d="M20.6 28 L28 11.8" stroke="#C3C6C9" stroke-width="2" stroke-linecap="round"/>
-      <circle cx="22" cy="29" r="5.6" fill="#B4B7BB"/><circle cx="22" cy="29" r="2.4" fill="#6F7378"/>
-      <path d="M29.5 12.5 L15 17" stroke="#F4F3EF" stroke-width="6" stroke-linecap="round"/>
-      <circle cx="29.5" cy="12.5" r="5" fill="#C9CBCE"/><circle cx="29.5" cy="12.5" r="2" fill="#6F7378"/>
-      <circle cx="15" cy="17" r="4.2" fill="#FFFFFF"/>
-      <rect x="10.4" y="18" width="9.2" height="11.5" rx="2.6" fill="#F4F3EF"/>
-      <rect x="10.4" y="18" width="2.6" height="11.5" rx="1.3" fill="#FFFFFF"/>
-      <rect x="10.4" y="20.2" width="9.2" height="2" fill="#3DDC84"/>
-      <rect x="11.6" y="29.2" width="6.8" height="2.6" rx=".8" fill="#9AA0A6"/>
-    </symbol>
-    <!-- pinza con scatola -->
-    <symbol id="g-gripper" viewBox="0 0 48 48">
-      <rect x="19" y="3" width="10" height="7" rx="2" fill="#F4F3EF"/>
-      <rect x="19" y="8" width="10" height="2" fill="#3DDC84"/>
-      <rect x="11" y="11" width="26" height="9" rx="3" fill="#2B2C31"/>
-      <rect x="11" y="11" width="26" height="2.6" rx="1.3" fill="#45474E"/>
-      <rect x="8" y="19" width="5" height="15" rx="1.6" fill="#C3C7CC"/>
-      <rect x="35" y="19" width="5" height="15" rx="1.6" fill="#C3C7CC"/>
-      <rect x="11.6" y="26" width="2.2" height="7" rx=".8" fill="#F0563A"/>
-      <rect x="34.2" y="26" width="2.2" height="7" rx=".8" fill="#F0563A"/>
-      <rect x="14" y="25" width="20" height="18" rx="2" fill="#C8955C"/>
-      <rect x="14" y="25" width="20" height="4" fill="#A8743F"/>
-      <rect x="21.5" y="25" width="5" height="18" fill="#B98149" opacity=".55"/>
-    </symbol>
-    <!-- teach pendant -->
-    <symbol id="g-pendant" viewBox="0 0 48 48">
-      <rect x="7" y="8" width="34" height="32" rx="6" fill="#4C8DFF"/>
-      <rect x="7" y="8" width="34" height="5" rx="2.5" fill="#79A9FF"/>
-      <rect x="11" y="13" width="21" height="16" rx="2" fill="#0B0B0C"/>
-      <path d="M13 25 l4 -4 3 2 5 -6 4 3" stroke="#3DDC84" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-      <circle cx="36.5" cy="17" r="3.4" fill="#F0563A"/><circle cx="36.5" cy="17" r="1.6" fill="#FF8A70"/>
-      <rect x="34.5" y="23" width="4" height="2.4" rx="1" fill="#F1EEC0"/>
-      <rect x="34.5" y="27" width="4" height="2.4" rx="1" fill="#F1EEC0"/>
-      <rect x="11" y="32" width="5" height="4" rx="1.2" fill="#F1EEC0"/><rect x="18" y="32" width="5" height="4" rx="1.2" fill="#F1EEC0"/><rect x="25" y="32" width="5" height="4" rx="1.2" fill="#F1EEC0"/>
-    </symbol>
-    <!-- PLC -->
-    <symbol id="g-plc" viewBox="0 0 48 48">
-      <rect x="4" y="38" width="40" height="4" rx="1" fill="#6F7378"/>
-      <rect x="6" y="9" width="13" height="29" rx="2" fill="#2E8B85"/>
-      <rect x="6" y="9" width="13" height="4" rx="1.5" fill="#46B0A8"/>
-      <rect x="20" y="9" width="10" height="29" rx="2" fill="#D9D7D0"/>
-      <rect x="31" y="9" width="11" height="29" rx="2" fill="#D9D7D0"/>
-      <rect x="9" y="17" width="7" height="5" rx="1" fill="#0B0B0C"/>
-      <circle cx="10" cy="27" r="1.5" fill="#3DDC84"/><circle cx="14.5" cy="27" r="1.5" fill="#F7B32B"/>
-      <g fill="#3DDC84"><circle cx="23" cy="15" r="1.2"/><circle cx="23" cy="19" r="1.2"/><circle cx="27" cy="15" r="1.2"/></g>
-      <g fill="#4C8DFF"><circle cx="34" cy="15" r="1.2"/><circle cx="38" cy="19" r="1.2"/></g>
-      <g fill="#9A9DA2"><rect x="22" y="28" width="6" height="1.6" rx=".8"/><rect x="22" y="31.5" width="6" height="1.6" rx=".8"/><rect x="33" y="28" width="7" height="1.6" rx=".8"/><rect x="33" y="31.5" width="7" height="1.6" rx=".8"/></g>
-    </symbol>
-    <!-- cronometro -->
-    <symbol id="g-watch" viewBox="0 0 48 48">
-      <rect x="20.5" y="4" width="7" height="4.2" rx="1.6" fill="#4C8DFF"/>
-      <rect x="22.6" y="7.6" width="2.8" height="4.4" fill="#4C8DFF"/>
-      <rect x="35" y="10.5" width="5.4" height="3.4" rx="1.3" fill="#4C8DFF" transform="rotate(45 37.7 12.2)"/>
-      <circle cx="24" cy="27" r="16" fill="#F0563A"/>
-      <path d="M12 21 a13 13 0 0 1 9 -9" stroke="#FF8A70" stroke-width="2.4" fill="none" stroke-linecap="round"/>
-      <circle cx="24" cy="27" r="12.2" fill="#F1EEC0"/>
-      <path d="M24 27 L24 15 A12 12 0 0 1 34.4 21 Z" fill="#4C8DFF" opacity=".25"/>
-      <path d="M24 16.4v2.6M24 35v2.6M13.4 27h2.6M32 27h2.6" stroke="#0B0B0C" stroke-width="2" stroke-linecap="round"/>
-      <path d="M24 27 V18.5 M24 27 l5.6 3.4" stroke="#0B0B0C" stroke-width="2.6" stroke-linecap="round"/>
-      <circle cx="24" cy="27" r="2" fill="#0B0B0C"/>
-    </symbol>
-    <!-- ingranaggio -->
-    <symbol id="g-gear" viewBox="0 0 48 48">
-      <g transform="translate(24 24)">
-        <g fill="#4C8DFF">
-          <rect x="-4" y="-21" width="8" height="9" rx="1.6"/>
-          <rect x="-4" y="-21" width="8" height="9" rx="1.6" transform="rotate(45)"/>
-          <rect x="-4" y="-21" width="8" height="9" rx="1.6" transform="rotate(90)"/>
-          <rect x="-4" y="-21" width="8" height="9" rx="1.6" transform="rotate(135)"/>
-          <rect x="-4" y="-21" width="8" height="9" rx="1.6" transform="rotate(180)"/>
-          <rect x="-4" y="-21" width="8" height="9" rx="1.6" transform="rotate(225)"/>
-          <rect x="-4" y="-21" width="8" height="9" rx="1.6" transform="rotate(270)"/>
-          <rect x="-4" y="-21" width="8" height="9" rx="1.6" transform="rotate(315)"/>
-          <circle r="15"/>
-        </g>
-        <path d="M-12 -6 A13 13 0 0 1 -4 -12.5" stroke="#79A9FF" stroke-width="2.4" fill="none" stroke-linecap="round"/>
-        <circle r="7.5" fill="#F1EEC0"/><circle r="3" fill="#F0563A"/>
-      </g>
-    </symbol>
-    <!-- pallet con scatole -->
-    <symbol id="g-pallet" viewBox="0 0 48 48">
-      <rect x="5" y="36" width="38" height="3.6" rx="1" fill="#4C8DFF"/>
-      <rect x="7" y="39.4" width="5" height="4" fill="#2F5FC4"/><rect x="21.5" y="39.4" width="5" height="4" fill="#2F5FC4"/><rect x="36" y="39.4" width="5" height="4" fill="#2F5FC4"/>
-      <g fill="#C8955C"><rect x="7" y="22" width="16" height="14" rx="1.2"/><rect x="25" y="22" width="16" height="14" rx="1.2"/><rect x="16" y="8" width="16" height="14" rx="1.2"/></g>
-      <g fill="#A8743F"><rect x="13" y="22" width="4" height="14"/><rect x="31" y="22" width="4" height="14"/><rect x="22" y="8" width="4" height="14"/></g>
-      <rect x="9" y="27" width="5" height="3" rx=".6" fill="#F1EEC0"/>
-    </symbol>
-    <!-- fulmine (velocità) -->
-    <symbol id="g-bolt" viewBox="0 0 48 48">
-      <path d="M28 3 L11 27 H22 L18 45 L37 19 H25.5 Z" fill="#F7B32B"/>
-      <path d="M28 3 L11 27 H16 L27.5 9 Z" fill="#FFD36E"/>
-      <path d="M6 14h6M4 21h5M38 31h6M36 38h5" stroke="#F1EEC0" stroke-width="2.4" stroke-linecap="round"/>
-    </symbol>
-  </svg>
 
   <div class="cursor" aria-hidden="true"></div>
   <a class="skip" href="#main"><span class="l-it">Vai al contenuto</span><span class="l-en">Skip to content</span></a>
@@ -178,15 +78,15 @@
       <div class="hero-top">
       <h1 class="headline">
         <span class="l-it">
-          <span class="ln">insegnare ai <span class="paren" aria-hidden="true"><span class="pp">(</span><span class="slot" data-set="cobot robot gripper pendant plc"><svg class="g" viewBox="0 0 48 48"><use href="#g-cobot"/></svg><img class="g g--img" src="assets/robot.gif" width="424" height="411" alt="" decoding="async" hidden></span><span class="pp">)</span></span> <em class="c-red">robot</em></span>
+          <span class="ln">insegnare ai <span class="paren" aria-hidden="true"><span class="pp">(</span><span class="slot" data-set="cobot robotino telecomando"><img class="g g--img" src="assets/gif/cobot.gif" width="424" height="411" alt="" decoding="async"></span><span class="pp">)</span></span> <em class="c-red">robot</em></span>
           <span class="ln">a muoversi è il <em class="c-blue">mestiere.</em></span>
-          <span class="ln"><em class="c-red">limare</em> <span class="paren" aria-hidden="true"><span class="pp">(</span><span class="slot" data-set="watch gear pallet bolt"><svg class="g" viewBox="0 0 48 48"><use href="#g-watch"/></svg></span><span class="pp">)</span></span> millisecondi</span>
+          <span class="ln"><em class="c-red">limare</em> <span class="paren" aria-hidden="true"><span class="pp">(</span><span class="slot" data-set="laptop pallet"><img class="g g--img" src="assets/gif/laptop.gif" width="424" height="411" alt="" decoding="async"></span><span class="pp">)</span></span> millisecondi</span>
           <span class="ln">è il <em class="c-blue">bonus</em></span>
         </span>
         <span class="l-en">
-          <span class="ln">teaching <span class="paren" aria-hidden="true"><span class="pp">(</span><span class="slot" data-set="cobot robot gripper pendant plc"><svg class="g" viewBox="0 0 48 48"><use href="#g-cobot"/></svg><img class="g g--img" src="assets/robot.gif" width="424" height="411" alt="" decoding="async" hidden></span><span class="pp">)</span></span> <em class="c-red">robots</em></span>
+          <span class="ln">teaching <span class="paren" aria-hidden="true"><span class="pp">(</span><span class="slot" data-set="cobot robotino telecomando"><img class="g g--img" src="assets/gif/cobot.gif" width="424" height="411" alt="" decoding="async"></span><span class="pp">)</span></span> <em class="c-red">robots</em></span>
           <span class="ln">to move is the <em class="c-blue">job.</em></span>
-          <span class="ln"><em class="c-red">shaving</em> <span class="paren" aria-hidden="true"><span class="pp">(</span><span class="slot" data-set="watch gear pallet bolt"><svg class="g" viewBox="0 0 48 48"><use href="#g-watch"/></svg></span><span class="pp">)</span></span> milliseconds</span>
+          <span class="ln"><em class="c-red">shaving</em> <span class="paren" aria-hidden="true"><span class="pp">(</span><span class="slot" data-set="laptop pallet"><img class="g g--img" src="assets/gif/laptop.gif" width="424" height="411" alt="" decoding="async"></span><span class="pp">)</span></span> milliseconds</span>
           <span class="ln">is the <em class="c-blue">bonus</em></span>
         </span>
       </h1>
@@ -197,7 +97,7 @@
       <!-- Cobot 3D (three.js) -->
       <div class="stage" id="stage" aria-label="Cobot 3D che esegue un ciclo di pick and place" role="img">
         <canvas id="cobot"></canvas>
-        <button type="button" class="tp-toggle" id="tp-toggle" aria-expanded="false" aria-controls="tp" aria-label="Teach pendant" title="Teach pendant"><svg viewBox="0 0 48 48" aria-hidden="true"><use href="#g-pendant"/></svg><span class="tp-ping" aria-hidden="true"></span></button>
+        <button type="button" class="tp-toggle" id="tp-toggle" aria-expanded="false" aria-controls="tp" aria-label="Teach pendant" title="Teach pendant"><img src="assets/gif/telecomando.gif" width="424" height="411" alt="" aria-hidden="true"><span class="tp-ping" aria-hidden="true"></span></button>
         <div class="tp" id="tp" hidden role="group" aria-label="Teach pendant">
           <div class="tp-head">
             <span class="tp-brand">TP-12</span>
@@ -457,9 +357,9 @@
   </footer>
 
   <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js" defer></script>
-  <script src="main.js?v=20261105155458" defer></script>
+  <script src="main.js?v=20261105195610" defer></script>
   <script type="module">
-    const go = () => import("./cobot.js?v=20261105155458");
+    const go = () => import("./cobot.js?v=20261105195610");
     if ("requestIdleCallback" in window) requestIdleCallback(go, { timeout: 1200 }); else setTimeout(go, 300);
   </script>
 </body>
