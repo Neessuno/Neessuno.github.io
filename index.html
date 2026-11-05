@@ -45,7 +45,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Anton&family=Bricolage+Grotesque:opsz,wght@12..96,200..800&family=Inter+Tight:wght@400;500;600&family=Instrument+Serif:ital@1&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=20261105110456">
+  <link rel="stylesheet" href="styles.css?v=20261105111217">
   <script type="importmap">
     { "imports": {
       "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js",
@@ -205,7 +205,7 @@
           <span>J4 <b data-j="3">0.0</b></span><span>J5 <b data-j="4">0.0</b></span><span>J6 <b data-j="5">0.0</b></span>
           <span class="hud-cycle"><span class="l-it">pezzi</span><span class="l-en">parts</span> <b id="hud-count">0</b></span>
         </div>
-        <button type="button" class="tp-toggle mono" id="tp-toggle" aria-expanded="false" aria-controls="tp"><i class="tp-dot"></i>Teach pendant</button>
+        <button type="button" class="tp-toggle" id="tp-toggle" aria-expanded="false" aria-controls="tp" aria-label="Teach pendant" title="Teach pendant"><svg viewBox="0 0 48 48" aria-hidden="true"><use href="#g-pendant"/></svg><span class="tp-ping" aria-hidden="true"></span></button>
         <div class="tp" id="tp" hidden>
           <div class="tp-head">
             <span class="mono">TP · CRB-12</span>
@@ -431,9 +431,9 @@
   </footer>
 
   <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js" defer></script>
-  <script src="main.js?v=20261105110456" defer></script>
+  <script src="main.js?v=20261105111217" defer></script>
   <script type="module">
-    const go = () => import("./cobot.js?v=20261105110456");
+    const go = () => import("./cobot.js?v=20261105111217");
     if ("requestIdleCallback" in window) requestIdleCallback(go, { timeout: 1200 }); else setTimeout(go, 300);
   </script>
 </body>
