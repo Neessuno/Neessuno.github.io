@@ -9,11 +9,43 @@
   <meta property="og:description" content="Celle robotizzate per pallettizzazione, pick & place e asservimento macchina. Dall'analisi al collaudo.">
   <meta name="theme-color" content="#0B0B0C">
   <meta name="color-scheme" content="dark">
+  <link rel="canonical" href="https://neessuno.github.io/">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://neessuno.github.io/">
+  <meta property="og:image" content="https://neessuno.github.io/assets/og.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Matteo Capitano — Robotics &amp; Automation Software Specialist">
+  <meta property="og:locale" content="it_IT">
+  <meta property="og:locale:alternate" content="en_US">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Matteo Capitano — Robotics Software Specialist">
+  <meta name="twitter:description" content="Celle robotizzate per pallettizzazione, pick &amp; place e asservimento macchina. Dall'analisi al collaudo.">
+  <meta name="twitter:image" content="https://neessuno.github.io/assets/og.png">
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+  <script>document.documentElement.classList.add("js");</script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    "name": "Matteo Capitano",
+    "url": "https://neessuno.github.io/",
+    "image": "https://neessuno.github.io/assets/og.png",
+    "jobTitle": "Robotics & Industrial Automation Software Specialist",
+    "worksFor": { "@type": "Organization", "name": "CMA S.r.l." },
+    "address": { "@type": "PostalAddress", "addressLocality": "Napoli", "addressCountry": "IT" },
+    "email": "mailto:matticapitano80@gmail.com",
+    "alumniOf": { "@type": "EducationalOrganization", "name": "ITS Luigi Galvani" },
+    "sameAs": ["https://www.linkedin.com/in/matteo-capitano-5b0aa3318/"],
+    "knowsLanguage": ["it", "en"],
+    "knowsAbout": ["Industrial robot programming", "Collaborative robots", "ABB RobotStudio", "Palletizing", "Pick and place", "Machine tending", "Siemens S7-1200", "TIA Portal", "Profinet", "EtherNet/IP", "Commissioning"]
+  }
+  </script>
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Anton&family=Bricolage+Grotesque:opsz,wght@12..96,200..800&family=Inter+Tight:wght@400;500;600&family=Instrument+Serif:ital@1&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=202611051053">
+  <link rel="stylesheet" href="styles.css?v=20261105110456">
   <script type="importmap">
     { "imports": {
       "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js",
@@ -173,6 +205,31 @@
           <span>J4 <b data-j="3">0.0</b></span><span>J5 <b data-j="4">0.0</b></span><span>J6 <b data-j="5">0.0</b></span>
           <span class="hud-cycle"><span class="l-it">pezzi</span><span class="l-en">parts</span> <b id="hud-count">0</b></span>
         </div>
+        <button type="button" class="tp-toggle mono" id="tp-toggle" aria-expanded="false" aria-controls="tp"><i class="tp-dot"></i>Teach pendant</button>
+        <div class="tp" id="tp" hidden>
+          <div class="tp-head">
+            <span class="mono">TP · CRB-12</span>
+            <span class="tp-state mono" id="tp-state">AUTO</span>
+            <button type="button" class="tp-estop" id="tp-estop" aria-pressed="false"><span class="l-it">Arresto di emergenza</span><span class="l-en">Emergency stop</span></button>
+          </div>
+          <div class="tp-modes mono" role="group" aria-label="Modalità / Mode">
+            <button type="button" data-mode="auto" aria-pressed="true">AUTO</button>
+            <button type="button" data-mode="manual" aria-pressed="false">MAN</button>
+          </div>
+          <div class="tp-jog">
+            <label class="mono"><span>J1</span><input type="range" data-jog="0" min="-170" max="170" step="0.5" disabled><output>0.0°</output></label>
+            <label class="mono"><span>J2</span><input type="range" data-jog="1" min="-170" max="60" step="0.5" disabled><output>0.0°</output></label>
+            <label class="mono"><span>J3</span><input type="range" data-jog="2" min="-150" max="150" step="0.5" disabled><output>0.0°</output></label>
+            <label class="mono"><span>J4</span><input type="range" data-jog="3" min="-180" max="180" step="0.5" disabled><output>0.0°</output></label>
+            <label class="mono"><span>J5</span><input type="range" data-jog="4" min="-90" max="90" step="0.5" disabled><output>0.0°</output></label>
+            <label class="mono"><span>J6</span><input type="range" data-jog="5" min="-180" max="180" step="0.5" disabled><output>0.0°</output></label>
+          </div>
+          <div class="tp-actions mono">
+            <button type="button" id="tp-grip" disabled><span class="l-it">Pinza</span><span class="l-en">Gripper</span></button>
+            <button type="button" id="tp-home" disabled>Home</button>
+          </div>
+          <p class="tp-note mono"><span class="l-it">MAN: muovi i giunti a mano · AUTO: riprende il ciclo</span><span class="l-en">MAN: jog the joints · AUTO: resume the cycle</span></p>
+        </div>
         <p class="stage-hint mono"><span class="l-it">muovi il mouse: il cobot ti segue, poi torna al ciclo</span><span class="l-en">move your mouse: the cobot follows, then resumes its cycle</span></p>
       </div>
 
@@ -308,6 +365,7 @@
           </div>
         </li>
       </ol>
+      <a class="cv-btn" href="assets/Matteo-Capitano-CV.pdf" download><span class="l-it">Scarica il CV</span><span class="l-en">Download CV</span> <span class="mono">PDF ↓</span></a>
     </section>
 
     <!-- ============ COMPETENZE ============ -->
@@ -345,10 +403,22 @@
 
   <!-- ============ CONTATTI ============ -->
   <footer class="contact" id="contact">
+    <div class="badge-stage" id="badge-stage" aria-hidden="true">
+      <svg class="lanyard" id="lanyard"><path class="lanyard-strap"/><path class="lanyard-stitch"/></svg>
+      <div class="badge" id="badge">
+        <span class="badge-hole"></span>
+        <span class="badge-top mono">EXHIBITOR</span>
+        <svg class="badge-glyph" viewBox="0 0 48 48"><use href="#g-cobot"/></svg>
+        <span class="badge-name">Matteo<br>Capitano</span>
+        <span class="badge-role mono">Robotics Specialist · CMA S.r.l.</span>
+        <span class="badge-bars"></span>
+      </div>
+    </div>
     <p class="eyebrow mono"><span class="l-it">altrove</span><span class="l-en">elsewhere</span></p>
     <ul class="links">
       <li><a href="https://www.linkedin.com/in/matteo-capitano-5b0aa3318/" target="_blank" rel="noopener" class="t-blue">LinkedIn ↗</a></li>
       <li><a href="mailto:matticapitano80@gmail.com" class="t-red">Email ↗</a></li>
+      <li><a href="assets/Matteo-Capitano-CV.pdf" class="t-cream" download>CV PDF ↓</a></li>
     </ul>
     <a class="cta" href="mailto:matticapitano80@gmail.com"><span class="l-it">parliamo del tuo <em class="c-red">impianto</em></span><span class="l-en">let's talk about your <em class="c-red">cell</em></span> <span class="arrow" aria-hidden="true">↗</span></a>
     <div class="marquee marquee--mail" aria-hidden="true">
@@ -361,7 +431,10 @@
   </footer>
 
   <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js" defer></script>
-  <script src="main.js?v=202611051053" defer></script>
-  <script type="module" src="cobot.js?v=202611051053"></script>
+  <script src="main.js?v=20261105110456" defer></script>
+  <script type="module">
+    const go = () => import("./cobot.js?v=20261105110456");
+    if ("requestIdleCallback" in window) requestIdleCallback(go, { timeout: 1200 }); else setTimeout(go, 300);
+  </script>
 </body>
 </html>

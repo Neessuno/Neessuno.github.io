@@ -19,14 +19,15 @@ function init() {
   const V3 = THREE.Vector3;
 
   /* ---------- Renderer / scena ---------- */
+  const low = (navigator.hardwareConcurrency || 8) <= 4 || (navigator.deviceMemory || 8) <= 4 || matchMedia("(max-width: 640px)").matches;
   let renderer;
   try {
-    renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true, powerPreference: "high-performance" });
+    renderer = new THREE.WebGLRenderer({ canvas, antialias: !low, alpha: true, powerPreference: "high-performance" });
   } catch (e) {
     stage.classList.add("no-webgl");
     return;
   }
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, low ? 1.5 : 2));
   renderer.shadowMap.enabled = true;
   renderer.shadowMap.type = THREE.PCFSoftShadowMap;
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
@@ -47,7 +48,7 @@ function init() {
   const key = new THREE.DirectionalLight(0xffffff, 2.6);
   key.position.set(2.2, 6, 3.4);
   key.castShadow = true;
-  key.shadow.mapSize.set(2048, 2048);
+  key.shadow.mapSize.set(low ? 1024 : 2048, low ? 1024 : 2048);
   Object.assign(key.shadow.camera, { left: -3, right: 3, top: 3, bottom: -3, near: 1, far: 16 });
   key.shadow.camera.updateProjectionMatrix();
   key.shadow.bias = -0.0004;
@@ -369,9 +370,12 @@ function init() {
     }
   }
 
-  /* ---------- Inseguimento del mouse ---------- */
+  /* ---------- Controllo: mouse, teach pendant, saluto e sguardo legati allo scroll ---------- */
+  const deg = r => (r * 180) / Math.PI;
+  let mode = "auto", estop = false;
   const pointer = { x: 0, y: 0, last: -1e9 };
   window.addEventListener("pointermove", e => {
+    if (mode !== "auto" || (e.target.closest && e.target.closest(".tp, .tp-toggle"))) return;
     const hr = hero.getBoundingClientRect();
     if (e.clientY < hr.top || e.clientY > hr.bottom) return;
     const r = stage.getBoundingClientRect();
@@ -380,31 +384,99 @@ function init() {
     pointer.last = performance.now();
   }, { passive: true });
 
-  const qF = qC.slice(), qFT = new Array(6), q = qC.slice();
-  let w = 0, camAz = 0;
-  function followTarget() {
-    const az = CAM_AZ + 0.12 + pointer.x * 0.85;
+  // torni in cima → il cobot saluta; scorri nella hero → guarda verso i contenuti
+  let armed = false, waveT0 = -1e9, lastScroll = -1e9;
+  window.addEventListener("scroll", () => {
+    const y = window.scrollY, vh = window.innerHeight;
+    if (y > vh * 0.7) armed = true;
+    if (armed && y < 30) { armed = false; waveT0 = performance.now(); }
+    if (y > vh * 0.04 && y < vh * 1.1) lastScroll = performance.now();
+  }, { passive: true });
+
+  const qF = qC.slice(), qFT = new Array(6), q = qC.slice(), qM = qC.slice();
+  let w = 0, camAz = 0, gripTarget = null, gripRestore = null;
+  function lookTarget(px, py) {
+    const az = CAM_AZ + 0.12 + px * 0.85;
     const r = 1.05;
-    tmp.set(r * Math.cos(az), 0.95 - pointer.y * 0.4, -r * Math.sin(az));
-    ik(tmp, 0.7 - pointer.y * 0.25, -pointer.x * 0.25, qFT);
-    qFT[5] = pointer.x * 0.5;
+    tmp.set(r * Math.cos(az), 0.95 - py * 0.4, -r * Math.sin(az));
+    ik(tmp, 0.7 - py * 0.25, -px * 0.25, qFT);
+    qFT[5] = px * 0.5;
+  }
+
+  /* Teach pendant */
+  const tp = document.getElementById("tp"), tpToggle = document.getElementById("tp-toggle");
+  const tpState = document.getElementById("tp-state"), tpEstop = document.getElementById("tp-estop");
+  const modeBtns = tp ? [...tp.querySelectorAll("[data-mode]")] : [];
+  const sliders = tp ? [...tp.querySelectorAll("[data-jog]")] : [];
+  const gripBtn = document.getElementById("tp-grip"), homeBtn = document.getElementById("tp-home");
+  const toHud = (qq, i) => [deg(qq[0]), deg(qq[1]) - 90, deg(qq[2]), deg(qq[3]) - 180, deg(qq[4]), deg(qq[5])][i];
+  const fromHud = (v, i) => ((i === 1 ? v + 90 : i === 3 ? v + 180 : v) * Math.PI) / 180;
+  function syncSliders() {
+    sliders.forEach((s, i) => { const v = toHud(qM, i); s.value = v; s.nextElementSibling.textContent = v.toFixed(1) + "°"; });
+  }
+  function setMode(m) {
+    if (estop || m === mode) return;
+    mode = m;
+    const man = m === "manual";
+    modeBtns.forEach(b => b.setAttribute("aria-pressed", String(b.dataset.mode === m)));
+    sliders.forEach(s => (s.disabled = !man));
+    if (homeBtn) homeBtn.disabled = !man;
+    if (gripBtn) gripBtn.disabled = !man || !!carried;
+    if (man) {
+      for (let i = 0; i < 6; i++) qM[i] = q[i];
+      gripRestore = grip; gripTarget = grip;
+      syncSliders();
+    } else {
+      gripTarget = null;                    // la pinza torna com'era nel ciclo
+    }
+  }
+  if (tp && tpToggle) {
+    tpToggle.addEventListener("click", () => {
+      const open = tp.hidden;
+      tp.hidden = !open;
+      tpToggle.setAttribute("aria-expanded", String(open));
+      if (!open) setMode("auto");
+    });
+    modeBtns.forEach(b => b.addEventListener("click", () => setMode(b.dataset.mode)));
+    sliders.forEach((s, i) => s.addEventListener("input", () => {
+      qM[i] = fromHud(parseFloat(s.value), i);
+      s.nextElementSibling.textContent = parseFloat(s.value).toFixed(1) + "°";
+    }));
+    homeBtn && homeBtn.addEventListener("click", () => { ik(aP, 0, 0, qM); syncSliders(); });
+    gripBtn && gripBtn.addEventListener("click", () => {
+      gripTarget = (gripTarget ?? grip) > (OPEN + CLOSED) / 2 ? CLOSED : OPEN;
+    });
+    tpEstop && tpEstop.addEventListener("click", () => {
+      estop = !estop;
+      tpEstop.setAttribute("aria-pressed", String(estop));
+      modeBtns.forEach(b => (b.disabled = estop));
+      sliders.forEach(s => (s.disabled = estop || mode !== "manual"));
+      updateHud(1, performance.now());
+    });
   }
 
   /* ---------- HUD ---------- */
   const hudJ = [...document.querySelectorAll("[data-j]")];
   const hudMode = document.getElementById("hud-mode");
   const led = document.querySelector(".hud .led");
-  const deg = r => (r * 180) / Math.PI;
-  let hudT = 0;
-  function updateHud(dt) {
+  let hudT = 0, state = "AUTO";
+  function updateHud(dt, now) {
     hudT += dt;
     if (hudT < 0.08) return;
     hudT = 0;
-    const v = [deg(q[0]), deg(q[1]) - 90, deg(q[2]), deg(q[3]) - 180, deg(q[4]), deg(q[5])];
-    hudJ.forEach((el, i) => { el.textContent = v[i].toFixed(1); });
-    const follow = w > 0.5;
-    if (hudMode) hudMode.textContent = follow ? "FOLLOW" : "AUTO";
-    if (led) led.classList.toggle("is-follow", follow);
+    hudJ.forEach((el, i) => { el.textContent = toHud(q, i).toFixed(1); });
+    if (estop) state = "E-STOP";
+    else if (mode === "manual") state = "MAN";
+    else if (now - waveT0 < 2200) state = "HELLO";
+    else state = w > 0.5 ? "FOLLOW" : "AUTO";
+    if (hudMode) hudMode.textContent = state;
+    if (led) { led.classList.toggle("is-follow", state !== "AUTO" && state !== "E-STOP"); led.classList.toggle("is-stop", estop); }
+    if (tpState) {
+      tpState.textContent = state;
+      tpState.classList.toggle("is-man", mode === "manual" && !estop);
+      tpState.classList.toggle("is-stop", estop);
+    }
+    if (gripBtn && mode === "manual") gripBtn.disabled = !!carried || estop;
   }
 
   /* ---------- Camera / resize ---------- */
@@ -438,7 +510,7 @@ function init() {
   resize();
   renderer.render(scene, camera);
   stage.classList.add("ready");
-  if (reduced) { updateHud(1); return; }
+  if (reduced) { updateHud(1, 0); return; }
 
   let last = performance.now();
   function frame(now) {
@@ -446,25 +518,45 @@ function init() {
     const dt = Math.min(0.05, (now - last) / 1000);
     last = now;
     if (!visible || document.hidden) return;
+    if (estop) { updateHud(dt, now); return; }           // arresto: tutto fermo
 
-    const following = now - pointer.last < 1600;
-    w += ((following ? 1 : 0) - w) * (1 - Math.exp(-dt * (following ? 3.2 : 2.2)));
+    const waving = mode === "auto" && now - waveT0 < 2200;
+    const looking = mode === "auto" && !waving && now - lastScroll < 900;
+    const following = mode === "auto" && !waving && !looking && now - pointer.last < 1600;
+    const engaged = mode === "manual" || waving || looking || following;
+    w += ((engaged ? 1 : 0) - w) * (1 - Math.exp(-dt * (engaged ? 3.2 : 2.2)));
     if (w < 0.02) runCycle(dt);
     updateWorld(dt);
 
     if (w < 0.001) for (let i = 0; i < 6; i++) qF[i] = qC[i];
     else {
-      followTarget();
-      const k = 1 - Math.exp(-dt * 4);
-      for (let i = 0; i < 6; i++) qF[i] += (qFT[i] - qF[i]) * k;
+      let k = 4;
+      if (mode === "manual") { for (let i = 0; i < 6; i++) qFT[i] = qM[i]; k = 7; }
+      else if (waving) {
+        const t = (now - waveT0) / 1000, env = Math.sin(Math.PI * Math.min(1, t / 2.2));
+        lookTarget(0, -0.7);
+        qFT[4] += Math.sin(t * 9) * 0.6 * env;          // rollio del polso: ciao!
+        qFT[3] -= 0.3 * env;
+        k = 6;
+      } else if (looking) lookTarget(0, 0.9);
+      else lookTarget(pointer.x, pointer.y);
+      const kk = 1 - Math.exp(-dt * k);
+      for (let i = 0; i < 6; i++) qF[i] += (qFT[i] - qF[i]) * kk;
     }
+
+    if (mode === "manual" && gripTarget !== null) grip += (gripTarget - grip) * (1 - Math.exp(-dt * 10));
+    else if (mode === "auto" && gripRestore !== null) {
+      grip += (gripRestore - grip) * (1 - Math.exp(-dt * 10));
+      if (Math.abs(grip - gripRestore) < 1e-4) { grip = gripRestore; gripRestore = null; }
+    }
+
     const ws = w * w * (3 - 2 * w);
     for (let i = 0; i < 6; i++) q[i] = lerp(qC[i], qF[i], ws);
     applyJoints(q);
 
-    camAz += (pointer.x * 0.1 * ws - camAz) * (1 - Math.exp(-dt * 2));
+    camAz += ((following ? pointer.x * 0.1 * ws : 0) - camAz) * (1 - Math.exp(-dt * 2));
     placeCamera();
-    updateHud(dt);
+    updateHud(dt, now);
     renderer.render(scene, camera);
   }
   requestAnimationFrame(frame);
