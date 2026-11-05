@@ -38,7 +38,7 @@ function init() {
   scene.environmentIntensity = 0.5;
 
   const camera = new THREE.PerspectiveCamera(28, 1, 0.1, 60);
-  const LOOK = new V3(0.42, 0.6, 0.42);
+  const LOOK = new V3(0.5, 0.68, 0.38);
   const CAM_DIR = new V3(1.0, 0.6, 1.3).normalize();
   const CAM_AZ = Math.atan2(-CAM_DIR.z, CAM_DIR.x);
   let camDist = 6.4;
@@ -82,18 +82,6 @@ function init() {
   function at(o, x, y, z) { o.position.set(x, y, z); return o; }
   const cyl = (rt, rb, h, seg = 48) => new THREE.CylinderGeometry(rt, rb, h, seg);
 
-  /* Carter di un giunto con asse Z (o X): corpo bianco, tappo blu, anello scuro */
-  function housing(r, len, axis = "z") {
-    const g = new THREE.Group();
-    g.add(mesh(cyl(r, r, len, 56), mat.white));
-    g.add(at(mesh(cyl(r * 0.8, r * 0.8, 0.014, 56), mat.blue), 0, len / 2 + 0.007, 0));
-    g.add(at(mesh(cyl(r * 0.5, r * 0.5, 0.02, 40), mat.dark), 0, len / 2 + 0.012, 0));
-    g.add(at(mesh(cyl(r * 1.008, r * 1.008, 0.018, 56), mat.dark), 0, -len / 2 + 0.035, 0));
-    if (axis === "z") g.rotation.x = Math.PI / 2;
-    else g.rotation.z = -Math.PI / 2;
-    return g;
-  }
-
   /* ---------- Pavimento ---------- */
   function radialTexture() {
     const c = document.createElement("canvas");
@@ -122,41 +110,60 @@ function init() {
   ring.position.y = 0.002;
   scene.add(ring);
 
-  /* ---------- Cobot ---------- */
-  const D1 = 0.42;            // altezza asse spalla
-  const L1 = 0.95, L2 = 0.85; // braccio, avambraccio
-  const W1 = 0.13, W2 = 0.11; // polso 1 → polso 2 → flangia
+  /* ---------- Cobot: colonna e braccio grigi, avambraccio e polso bianchi, LED verde ---------- */
+  mat.grey = new THREE.MeshPhysicalMaterial({ color: 0x7f8287, roughness: 0.45, metalness: 0.05, clearcoat: 0.3, clearcoatRoughness: 0.35 });
+  mat.led = new THREE.MeshStandardMaterial({ color: 0x3ddc84, emissive: 0x3ddc84, emissiveIntensity: 2.2 });
+
+  /* Carter di un giunto: cilindro con tappo leggermente rientrato e anello scuro */
+  function housing(r, len, m, axis = "z") {
+    const g = new THREE.Group();
+    g.add(mesh(cyl(r, r, len, 64), m));
+    for (const s of [1, -1]) {
+      g.add(at(mesh(cyl(r * 0.86, r * 0.86, 0.01, 64), m), 0, s * (len / 2 + 0.004), 0));
+      g.add(at(mesh(cyl(r * 0.3, r * 0.3, 0.012, 32), mat.dark), 0, s * (len / 2 + 0.008), 0));
+    }
+    g.add(at(mesh(cyl(r * 1.006, r * 1.006, 0.012, 64), mat.dark), 0, len * 0.18, 0));
+    if (axis === "z") g.rotation.x = Math.PI / 2;
+    else g.rotation.z = -Math.PI / 2;
+    return g;
+  }
+
+  const D1 = 0.5;             // altezza asse spalla
+  const L1 = 0.9, L2 = 0.8;   // braccio, avambraccio
+  const WR = 0.3;             // cilindro del polso (verso la flangia)
   const GL = 0.26;            // flangia → TCP (centro presa)
-  const TOOL = W1 + W2 + GL;
+  const TOOL = WR + GL;
+  const SIDE = 0.18;          // braccio spostato di lato rispetto alla colonna
 
   const robot = new THREE.Group();
   scene.add(robot);
-  robot.add(at(mesh(cyl(0.3, 0.32, 0.05, 64), mat.dark), 0, 0.025, 0));
-  robot.add(at(mesh(cyl(0.155, 0.17, 0.2, 64), mat.white), 0, 0.15, 0));
-  robot.add(at(mesh(cyl(0.162, 0.162, 0.018, 64), mat.blue), 0, 0.258, 0));
+  robot.add(at(mesh(new RoundedBoxGeometry(0.38, 0.04, 0.38, 2, 0.012), mat.grey), 0, 0.02, 0));
+  for (const x of [-0.15, 0.15]) for (const z of [-0.15, 0.15]) robot.add(at(mesh(cyl(0.014, 0.014, 0.012, 16), mat.dark), x, 0.046, z));
+  robot.add(at(mesh(cyl(0.118, 0.135, 0.3, 64), mat.grey), 0, 0.19, 0));
+  robot.add(at(mesh(cyl(0.122, 0.122, 0.012, 64), mat.dark), 0, 0.336, 0));
 
-  const j1 = new THREE.Group(); j1.position.y = 0.27; robot.add(j1);
-  j1.add(at(mesh(cyl(0.15, 0.158, 0.16, 64), mat.white), 0, 0.08, 0));
+  const j1 = new THREE.Group(); j1.position.y = 0.34; robot.add(j1);
+  j1.add(at(mesh(cyl(0.118, 0.118, 0.07, 64), mat.grey), 0, 0.035, 0));
 
-  const j2 = new THREE.Group(); j2.position.y = D1 - 0.27; j1.add(j2);
-  j2.add(housing(0.14, 0.3));
-  j2.add(at(mesh(cyl(0.078, 0.09, L1 - 0.2, 48), mat.white), 0, L1 / 2, 0));
+  const j2 = new THREE.Group(); j2.position.y = D1 - 0.34; j1.add(j2);
+  j2.add(at(housing(0.128, 0.34, mat.grey), 0, 0, SIDE * 0.5));
+  j2.add(at(mesh(new RoundedBoxGeometry(0.17, L1, 0.13, 4, 0.055), mat.grey), 0, L1 / 2, SIDE));
 
   const j3 = new THREE.Group(); j3.position.y = L1; j2.add(j3);
-  j3.add(housing(0.112, 0.24));
-  j3.add(at(mesh(cyl(0.062, 0.072, L2 - 0.16, 48), mat.white), 0, L2 / 2, 0));
+  j3.add(at(housing(0.108, 0.33, mat.grey), 0, 0, SIDE * 0.5));
+  j3.add(at(mesh(new RoundedBoxGeometry(0.13, L2, 0.115, 4, 0.05), mat.white), 0, L2 / 2, 0));
 
   const j4 = new THREE.Group(); j4.position.y = L2; j3.add(j4);
-  j4.add(housing(0.078, 0.17));
-  j4.add(at(mesh(cyl(0.058, 0.058, W1, 40), mat.white), 0, W1 / 2, 0));
+  j4.add(housing(0.088, 0.2, mat.white));
 
-  const j5 = new THREE.Group(); j5.position.y = W1; j4.add(j5);
-  j5.add(housing(0.072, 0.16, "x"));
-  j5.add(at(mesh(cyl(0.054, 0.054, W2, 40), mat.white), 0, W2 / 2, 0));
+  const j5 = new THREE.Group(); j4.add(j5);
+  j5.add(at(mesh(cyl(0.078, 0.078, WR - 0.03, 64), mat.white), 0, (WR - 0.03) / 2 + 0.03, 0));
+  j5.add(at(mesh(cyl(0.0795, 0.0795, 0.02, 64), mat.led, false), 0, 0.12, 0));
+  j5.add(at(mesh(cyl(0.0795, 0.0795, 0.008, 64), mat.dark), 0, WR - 0.006, 0));
 
-  const j6 = new THREE.Group(); j6.position.y = W2; j5.add(j6);
-  j6.add(at(mesh(cyl(0.058, 0.058, 0.03, 40), mat.alu), 0, 0.015, 0));
-  j6.add(at(mesh(cyl(0.06, 0.06, 0.012, 40), mat.blue), 0, 0.036, 0));
+  const j6 = new THREE.Group(); j6.position.y = WR; j5.add(j6);
+  j6.add(at(mesh(cyl(0.062, 0.066, 0.03, 48), mat.alu), 0, 0.015, 0));
+  j6.add(at(mesh(cyl(0.05, 0.05, 0.012, 48), mat.dark), 0, 0.036, 0));
   j6.add(at(mesh(new RoundedBoxGeometry(0.21, 0.09, 0.1, 3, 0.02), mat.dark), 0, 0.087, 0));
   j6.add(at(mesh(new THREE.BoxGeometry(0.24, 0.016, 0.03), mat.alu), 0, 0.135, 0));
   function finger(side) {
@@ -398,7 +405,7 @@ function init() {
     if (!wpx || !hpx) return;
     renderer.setSize(wpx, hpx, false);
     camera.aspect = wpx / hpx;
-    camDist = 6.2 * Math.pow(Math.max(1, 1.75 / camera.aspect), 0.75);
+    camDist = 5.1 * Math.pow(Math.max(1, 1.75 / camera.aspect), 0.75);
     camera.updateProjectionMatrix();
     placeCamera();
     if (reduced) renderer.render(scene, camera);

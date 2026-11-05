@@ -12,7 +12,7 @@
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Instrument+Serif:ital@1&family=JetBrains+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=Inter+Tight:wght@400;500;600&family=Instrument+Serif:ital@1&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
   <script type="importmap">
     { "imports": {
@@ -22,6 +22,33 @@
   </script>
 </head>
 <body>
+  <!-- Sprite dei glifi tra parentesi -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <symbol id="g-cobot" viewBox="0 0 48 48">
+      <rect x="13" y="41" width="18" height="4" rx="1.2" fill="#7E8185"/>
+      <rect x="17" y="30" width="10" height="12" rx="2.5" fill="#A9ABAE"/>
+      <path d="M22 29 L29 12" stroke="#B9BBBE" stroke-width="6.5" stroke-linecap="round"/>
+      <circle cx="22" cy="29" r="5.2" fill="#C4C6C9"/><circle cx="22" cy="29" r="2.2" fill="#7E8185"/>
+      <path d="M29 12 L15 16.5" stroke="#F4F3EF" stroke-width="5.6" stroke-linecap="round"/>
+      <circle cx="29" cy="12" r="4.6" fill="#D2D4D6"/><circle cx="29" cy="12" r="1.9" fill="#7E8185"/>
+      <circle cx="15" cy="16.5" r="3.8" fill="#F4F3EF"/>
+      <rect x="10.8" y="17.5" width="8.4" height="11" rx="2.4" fill="#F4F3EF"/>
+      <rect x="10.8" y="19.6" width="8.4" height="1.8" fill="#3DDC84"/>
+      <rect x="12" y="28.2" width="6" height="2.4" rx=".6" fill="#9AA0A6"/>
+    </symbol>
+    <symbol id="g-watch" viewBox="0 0 48 48">
+      <rect x="20.5" y="5" width="7" height="4" rx="1.6" fill="#4C8DFF"/>
+      <rect x="22.6" y="8.5" width="2.8" height="4" fill="#4C8DFF"/>
+      <rect x="35" y="11" width="5" height="3.2" rx="1.2" fill="#4C8DFF" transform="rotate(45 37.5 12.6)"/>
+      <circle cx="24" cy="27" r="15.5" fill="#F0563A"/>
+      <circle cx="24" cy="27" r="12" fill="#F1EEC0"/>
+      <path d="M24 16.6v2.6M24 34.8v2.6M13.6 27h2.6M31.8 27h2.6" stroke="#0B0B0C" stroke-width="2" stroke-linecap="round"/>
+      <path d="M24 27 V19.5 M24 27 l5 3.2" stroke="#0B0B0C" stroke-width="2.6" stroke-linecap="round"/>
+      <circle cx="24" cy="27" r="1.9" fill="#0B0B0C"/>
+    </symbol>
+  </svg>
+
+  <div class="cursor" aria-hidden="true"></div>
   <a class="skip" href="#main"><span class="l-it">Vai al contenuto</span><span class="l-en">Skip to content</span></a>
 
   <!-- ============ NAV AGLI ANGOLI (come Kenji) ============ -->
@@ -46,18 +73,19 @@
     <section class="hero" id="top">
       <h1 class="headline">
         <span class="l-it">
-          <span class="ln">insegnare ai <span class="paren" aria-hidden="true">(<svg class="g" viewBox="0 0 40 40"><rect x="9" y="33" width="16" height="4" rx="1" fill="#2B2B2E"/><path d="M17 33 V22 L28 12" stroke="#F1EEC0" stroke-width="5" stroke-linecap="round" fill="none"/><circle cx="17" cy="22" r="4" fill="#4C8DFF"/><circle cx="28" cy="12" r="3.5" fill="#4C8DFF"/><path d="M28 12 l5 6 M33 18 l-2 4 M33 18 l3 3" stroke="#F0563A" stroke-width="2.4" stroke-linecap="round" fill="none"/></svg>)</span> <em class="c-red">robot</em></span>
+          <span class="ln">insegnare ai <span class="paren" aria-hidden="true">(<svg class="g" viewBox="0 0 48 48"><use href="#g-cobot"/></svg>)</span> <em class="c-red">robot</em></span>
           <span class="ln">a muoversi è il <em class="c-blue">mestiere.</em></span>
-          <span class="ln"><em class="c-red">limare</em> <span class="paren" aria-hidden="true">(<svg class="g" viewBox="0 0 40 40"><circle cx="20" cy="22" r="13" fill="#F0563A"/><circle cx="20" cy="22" r="9.5" fill="#F1EEC0"/><path d="M20 22 V15.5 M20 22 l4.5 3" stroke="#0B0B0C" stroke-width="2.6" stroke-linecap="round"/><rect x="16.5" y="4" width="7" height="4" rx="1.5" fill="#4C8DFF"/></svg>)</span> millisecondi</span>
+          <span class="ln"><em class="c-red">limare</em> <span class="paren" aria-hidden="true">(<svg class="g" viewBox="0 0 48 48"><use href="#g-watch"/></svg>)</span> millisecondi</span>
           <span class="ln">è il <em class="c-blue">bonus</em></span>
         </span>
         <span class="l-en">
-          <span class="ln">teaching <span class="paren" aria-hidden="true">(<svg class="g" viewBox="0 0 40 40"><rect x="9" y="33" width="16" height="4" rx="1" fill="#2B2B2E"/><path d="M17 33 V22 L28 12" stroke="#F1EEC0" stroke-width="5" stroke-linecap="round" fill="none"/><circle cx="17" cy="22" r="4" fill="#4C8DFF"/><circle cx="28" cy="12" r="3.5" fill="#4C8DFF"/><path d="M28 12 l5 6 M33 18 l-2 4 M33 18 l3 3" stroke="#F0563A" stroke-width="2.4" stroke-linecap="round" fill="none"/></svg>)</span> <em class="c-red">robots</em></span>
+          <span class="ln">teaching <span class="paren" aria-hidden="true">(<svg class="g" viewBox="0 0 48 48"><use href="#g-cobot"/></svg>)</span> <em class="c-red">robots</em></span>
           <span class="ln">to move is the <em class="c-blue">job.</em></span>
-          <span class="ln"><em class="c-red">shaving</em> <span class="paren" aria-hidden="true">(<svg class="g" viewBox="0 0 40 40"><circle cx="20" cy="22" r="13" fill="#F0563A"/><circle cx="20" cy="22" r="9.5" fill="#F1EEC0"/><path d="M20 22 V15.5 M20 22 l4.5 3" stroke="#0B0B0C" stroke-width="2.6" stroke-linecap="round"/><rect x="16.5" y="4" width="7" height="4" rx="1.5" fill="#4C8DFF"/></svg>)</span> milliseconds</span>
+          <span class="ln"><em class="c-red">shaving</em> <span class="paren" aria-hidden="true">(<svg class="g" viewBox="0 0 48 48"><use href="#g-watch"/></svg>)</span> milliseconds</span>
           <span class="ln">is the <em class="c-blue">bonus</em></span>
         </span>
       </h1>
+      <p class="byline mono">Matteo Capitano — Robotics &amp; Automation Software Specialist · Napoli, IT</p>
 
       <!-- Cobot 3D (three.js) -->
       <div class="stage" id="stage" aria-label="Cobot 3D che esegue un ciclo di pick and place" role="img">
@@ -76,8 +104,16 @@
 
     <!-- ============ INTRO ============ -->
     <section class="intro" id="intro">
-      <p class="l-it"><span class="c-red">*</span> Sono Matteo Capitano, programmatore di robot <span class="serif">industriali e collaborativi</span>. Progetto e avvio <span class="c-red">celle robotizzate</span> per <span class="serif">pallettizzazione, pick &amp; place</span> e <span class="c-blue">asservimento macchina</span>, dall'analisi dei requisiti fino al <span class="c-blue">collaudo dal cliente</span>. Oggi sono Software Analyst &amp; Designer in <span class="c-red">CMA S.r.l.</span> Benvenuto in <span class="pill">cella</span>!</p>
-      <p class="l-en"><span class="c-red">*</span> I'm Matteo Capitano, an <span class="serif">industrial and collaborative</span> robot programmer. I design and commission <span class="c-red">robotic cells</span> for <span class="serif">palletizing, pick &amp; place</span> and <span class="c-blue">machine tending</span>, from requirements analysis all the way to <span class="c-blue">on-site acceptance</span>. Currently Software Analyst &amp; Designer at <span class="c-red">CMA S.r.l.</span> Welcome to the <span class="pill">cell</span>!</p>
+      <p class="l-it"><span class="c-red">*</span> Sono Matteo Capitano, programmatore di robot <span class="serif">industriali e collaborativi</span>. Progetto e avvio <span class="c-red">celle robotizzate</span> per <span class="serif">pallettizzazione, pick &amp; place</span> e <span class="c-blue">asservimento macchina</span>, dall'analisi dei requisiti fino al <span class="c-blue">collaudo dal cliente</span>. Oggi sono Software Analyst &amp; Designer in <span class="c-red">CMA S.r.l.</span>, dove porto le competenze tecniche anche <span class="serif">sul fronte commerciale</span>: tra <span class="c-blue">fiere</span> e trasferte fino in <span class="c-red">Cina</span>. Benvenuto in <span class="pill">cella</span>!</p>
+      <p class="l-en"><span class="c-red">*</span> I'm Matteo Capitano, an <span class="serif">industrial and collaborative</span> robot programmer. I design and commission <span class="c-red">robotic cells</span> for <span class="serif">palletizing, pick &amp; place</span> and <span class="c-blue">machine tending</span>, from requirements analysis all the way to <span class="c-blue">on-site acceptance</span>. Currently Software Analyst &amp; Designer at <span class="c-red">CMA S.r.l.</span>, where I also bring my technical know-how <span class="serif">to the commercial side</span>: from <span class="c-blue">trade fairs</span> to business trips as far as <span class="c-red">China</span>. Welcome to the <span class="pill">cell</span>!</p>
+    </section>
+
+    <!-- ============ NUMERI ============ -->
+    <section class="stats" aria-label="In breve / At a glance">
+      <div class="stat"><b class="c-blue">8</b><span><span class="l-it">marche di robot programmate</span><span class="l-en">robot brands programmed</span></span></div>
+      <div class="stat"><b class="c-red">4</b><span><span class="l-it">tipi di cella: pallettizzazione, pick &amp; place, asservimento, movimentazione</span><span class="l-en">cell types: palletizing, pick &amp; place, tending, handling</span></span></div>
+      <div class="stat"><b>100<small>/100</small></b><span><span class="l-it">diploma tecnico, curvatura robotica</span><span class="l-en">technical diploma, robotics track</span></span></div>
+      <div class="stat"><b class="c-blue">C1</b><span><span class="l-it">inglese (comprensione), più l'Erasmus a Siviglia</span><span class="l-en">English (comprehension), plus Erasmus in Seville</span></span></div>
     </section>
 
     <!-- ============ MARQUEE ============ -->
@@ -164,6 +200,18 @@
           </div>
         </li>
         <li>
+          <span class="when mono"><span class="l-it">in parallelo</span><span class="l-en">alongside</span></span>
+          <div>
+            <h3><span class="l-it">Tecnico commerciale · fiere ed estero</span><span class="l-en">Technical sales · trade fairs &amp; international</span></h3>
+            <p class="where mono">CMA S.r.l.</p>
+            <p><span class="l-it">Affianco l'area commerciale come riferimento tecnico: allo stand presento le soluzioni robotiche dell'azienda, rispondo alle domande tecniche dei visitatori e raccolgo i requisiti dei potenziali clienti da girare all'ufficio tecnico.</span><span class="l-en">I support the sales team as the technical point of contact: at the booth I present the company's robotic solutions, answer visitors' technical questions and gather prospects' requirements for the engineering team.</span></p>
+            <ul class="bullets">
+              <li><b><span class="l-it">Fiere di settore</span><span class="l-en">Industry trade fairs</span></b> — <span class="l-it">presenza allo stand, demo e primi contatti con nuovi clienti.</span><span class="l-en">booth presence, demos and first contact with new customers.</span></li>
+              <li><b><span class="l-it">Missione in Cina</span><span class="l-en">Business trip to China</span></b> — <span class="l-it">incontri con produttori e fornitori per valutare componenti e avviare nuove collaborazioni.</span><span class="l-en">meetings with manufacturers and suppliers to assess components and open new partnerships.</span></li>
+            </ul>
+          </div>
+        </li>
+        <li>
           <span class="when mono">09/2019 — 07/2024</span>
           <div>
             <h3><span class="l-it">Diploma in Elettrotecnica ed Elettronica</span><span class="l-en">Technical diploma in Electrical &amp; Electronic Engineering</span> <span class="pill pill--sm">100/100</span></h3>
@@ -212,7 +260,7 @@
             <li><span><span class="l-it">Italiano</span><span class="l-en">Italian</span></span><span><span class="l-it">madrelingua</span><span class="l-en">native</span></span></li>
             <li><span><span class="l-it">Inglese</span><span class="l-en">English</span></span><span>C1 · B2</span></li>
           </ul>
-          <p class="module-foot mono"><span class="l-it">+ comunicazione tecnica con clienti e team multidisciplinari</span><span class="l-en">+ technical communication with clients and cross-functional teams</span></p>
+          <p class="module-foot mono"><span class="l-it">+ comunicazione tecnica con clienti, fiere e fornitori esteri</span><span class="l-en">+ technical communication with clients, at trade fairs and with foreign suppliers</span></p>
         </div>
       </div>
     </section>
@@ -235,6 +283,7 @@
     <p class="fineprint mono">© <span id="year">2026</span> Matteo Capitano · <span class="l-it">fatto a mano, senza teach pendant</span><span class="l-en">handmade, no teach pendant needed</span></p>
   </footer>
 
+  <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js" defer></script>
   <script src="main.js" defer></script>
   <script type="module" src="cobot.js"></script>
 </body>
