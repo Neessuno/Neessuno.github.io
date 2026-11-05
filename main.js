@@ -144,16 +144,11 @@
   const dot = document.querySelector(".cursor");
   if (!dot || !matchMedia("(hover: hover) and (pointer: fine)").matches) return;
   document.documentElement.classList.add("has-cursor");
-  let x = -100, y = -100, cx = -100, cy = -100;
+  // il pallino segue il mouse senza ritardo: posizione aggiornata a ogni evento
   window.addEventListener("pointermove", e => {
-    x = e.clientX; y = e.clientY;
+    dot.style.transform = `translate3d(${e.clientX}px, ${e.clientY}px, 0)`;
     dot.classList.add("is-on");
     dot.classList.toggle("is-link", !!e.target.closest("a, button"));
   }, { passive: true });
   document.addEventListener("pointerleave", () => dot.classList.remove("is-on"));
-  (function loop() {
-    cx += (x - cx) * 0.22; cy += (y - cy) * 0.22;
-    dot.style.transform = `translate3d(${cx}px, ${cy}px, 0)`;
-    requestAnimationFrame(loop);
-  })();
 })();
