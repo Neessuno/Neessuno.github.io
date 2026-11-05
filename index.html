@@ -44,8 +44,8 @@
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Bricolage+Grotesque:opsz,wght@12..96,200..800&family=Inter+Tight:wght@400;500;600&family=Instrument+Serif:ital@1&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=20261105111217">
+  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Archivo:ital,wght@0,100..900;1,100..900&family=Instrument+Serif:ital@1&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css?v=20261105112115">
   <script type="importmap">
     { "imports": {
       "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js",
@@ -180,6 +180,7 @@
   <main id="main">
     <!-- ============ HERO ============ -->
     <section class="hero" id="top">
+      <div class="hero-top">
       <h1 class="headline">
         <span class="l-it">
           <span class="ln">insegnare ai <span class="paren" aria-hidden="true"><span class="pp">(</span><span class="slot" data-set="cobot gripper pendant plc"><svg class="g" viewBox="0 0 48 48"><use href="#g-cobot"/></svg></span><span class="pp">)</span></span> <em class="c-red">robot</em></span>
@@ -194,21 +195,18 @@
           <span class="ln">is the <em class="c-blue">bonus</em></span>
         </span>
       </h1>
-      <p class="byline mono">Matteo Capitano — Robotics &amp; Automation Software Specialist · Napoli, IT</p>
+
+        <p class="hero-note"><span class="l-it">(v1.0) — nuovi progetti in arrivo.</span><span class="l-en">(v1.0) — more projects on the way.</span></p>
+        <a href="#intro" class="scroll-cue" aria-label="Scorri / Scroll"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 9l7 7 7-7"/></svg></a>
+      </div>
 
       <!-- Cobot 3D (three.js) -->
       <div class="stage" id="stage" aria-label="Cobot 3D che esegue un ciclo di pick and place" role="img">
         <canvas id="cobot"></canvas>
-        <div class="hud mono" aria-hidden="true">
-          <span class="hud-mode"><i class="led"></i><b id="hud-mode">AUTO</b></span>
-          <span>J1 <b data-j="0">0.0</b></span><span>J2 <b data-j="1">0.0</b></span><span>J3 <b data-j="2">0.0</b></span>
-          <span>J4 <b data-j="3">0.0</b></span><span>J5 <b data-j="4">0.0</b></span><span>J6 <b data-j="5">0.0</b></span>
-          <span class="hud-cycle"><span class="l-it">pezzi</span><span class="l-en">parts</span> <b id="hud-count">0</b></span>
-        </div>
         <button type="button" class="tp-toggle" id="tp-toggle" aria-expanded="false" aria-controls="tp" aria-label="Teach pendant" title="Teach pendant"><svg viewBox="0 0 48 48" aria-hidden="true"><use href="#g-pendant"/></svg><span class="tp-ping" aria-hidden="true"></span></button>
         <div class="tp" id="tp" hidden>
           <div class="tp-head">
-            <span class="mono">TP · CRB-12</span>
+            <span class="mono">TP, CRB-12</span>
             <span class="tp-state mono" id="tp-state">AUTO</span>
             <button type="button" class="tp-estop" id="tp-estop" aria-pressed="false"><span class="l-it">Arresto di emergenza</span><span class="l-en">Emergency stop</span></button>
           </div>
@@ -228,26 +226,16 @@
             <button type="button" id="tp-grip" disabled><span class="l-it">Pinza</span><span class="l-en">Gripper</span></button>
             <button type="button" id="tp-home" disabled>Home</button>
           </div>
-          <p class="tp-note mono"><span class="l-it">MAN: muovi i giunti a mano · AUTO: riprende il ciclo</span><span class="l-en">MAN: jog the joints · AUTO: resume the cycle</span></p>
+          <p class="tp-note mono"><span class="l-it">MAN: muovi i giunti a mano, AUTO: riprende il ciclo</span><span class="l-en">MAN: jog the joints, AUTO: resume the cycle</span></p>
         </div>
-        <p class="stage-hint mono"><span class="l-it">muovi il mouse: il cobot ti segue, poi torna al ciclo</span><span class="l-en">move your mouse: the cobot follows, then resumes its cycle</span></p>
       </div>
 
-      <a href="#intro" class="scroll-cue" aria-label="Scorri / Scroll"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 9l7 7 7-7"/></svg></a>
     </section>
 
     <!-- ============ INTRO ============ -->
     <section class="intro" id="intro">
-      <p class="l-it"><span class="c-red">*</span> Sono Matteo Capitano, programmatore di robot <span class="serif">industriali e collaborativi</span>. Progetto e avvio <span class="c-red">celle robotizzate</span> per <span class="serif">pallettizzazione, pick &amp; place</span> e <span class="c-blue">asservimento macchina</span>, dall'analisi dei requisiti fino al <span class="c-blue">collaudo dal cliente</span>. Oggi sono Software Analyst &amp; Designer in <span class="c-red">CMA S.r.l.</span>, dove porto le competenze tecniche anche <span class="serif">sul fronte commerciale</span>: tra <span class="c-blue">fiere</span> e trasferte fino in <span class="c-red">Cina</span>. Benvenuto in <span class="pill">cella</span>!</p>
-      <p class="l-en"><span class="c-red">*</span> I'm Matteo Capitano, an <span class="serif">industrial and collaborative</span> robot programmer. I design and commission <span class="c-red">robotic cells</span> for <span class="serif">palletizing, pick &amp; place</span> and <span class="c-blue">machine tending</span>, from requirements analysis all the way to <span class="c-blue">on-site acceptance</span>. Currently Software Analyst &amp; Designer at <span class="c-red">CMA S.r.l.</span>, where I also bring my technical know-how <span class="serif">to the commercial side</span>: from <span class="c-blue">trade fairs</span> to business trips as far as <span class="c-red">China</span>. Welcome to the <span class="pill">cell</span>!</p>
-    </section>
-
-    <!-- ============ NUMERI ============ -->
-    <section class="stats" aria-label="In breve / At a glance">
-      <div class="stat"><b class="c-blue">8</b><span><span class="l-it">marche di robot programmate</span><span class="l-en">robot brands programmed</span></span></div>
-      <div class="stat"><b class="c-red">4</b><span><span class="l-it">tipi di cella: pallettizzazione, pick &amp; place, asservimento, movimentazione</span><span class="l-en">cell types: palletizing, pick &amp; place, tending, handling</span></span></div>
-      <div class="stat"><b>100<small>/100</small></b><span><span class="l-it">diploma tecnico, curvatura robotica</span><span class="l-en">technical diploma, robotics track</span></span></div>
-      <div class="stat"><b class="c-blue">C1</b><span><span class="l-it">inglese (comprensione), più l'Erasmus a Siviglia</span><span class="l-en">English (comprehension), plus Erasmus in Seville</span></span></div>
+      <p class="l-it"><span class="c-red">*</span> Ciao, sono Matteo. Programmo <span class="c-red">robot industriali</span> e <span class="c-blue">cobot</span>: celle di pallettizzazione, pick &amp; place, asservimento macchina. Le scrivo in ufficio e poi le porto <span class="serif">sull'impianto del cliente</span>, finché non girano come devono. Lavoro in <span class="c-red">CMA</span>, e ogni tanto passo dall'altra parte del bancone: in <span class="c-blue">fiera</span> o in <span class="c-red">Cina</span> a cercare fornitori. Fai come a <span class="pill">casa</span>!</p>
+      <p class="l-en"><span class="c-red">*</span> Hi, I'm Matteo. I program <span class="c-red">industrial robots</span> and <span class="c-blue">cobots</span>: palletizing, pick &amp; place and machine tending cells. I write them at the desk, then take them <span class="serif">to the customer's plant</span> and stay until they run right. I work at <span class="c-red">CMA</span>, and now and then I switch sides: at <span class="c-blue">trade fairs</span>, or in <span class="c-red">China</span> looking for suppliers. Make yourself at <span class="pill">home</span>!</p>
     </section>
 
     <!-- ============ MARQUEE ============ -->
@@ -269,17 +257,17 @@
          e rimuovi l'attributo data-placeholder. -->
     <section class="work" id="work">
       <h2 class="section-title"><span class="l-it">progetti in <em class="c-red">evidenza</em></span><span class="l-en">featured <em class="c-red">works</em></span></h2>
-      <p class="section-note mono"><span class="l-it">Clienti riservati · NDA</span><span class="l-en">Confidential clients · NDA</span></p>
+      <p class="section-note"><span class="l-it">I nomi dei clienti restano riservati.</span><span class="l-en">Client names stay confidential.</span></p>
 
       <article class="project">
         <div class="project-text">
           <ul class="tags"><li class="t-cream"><span class="l-it">Pallettizzazione</span><span class="l-en">Palletizing</span></li><li class="t-blue">PLC Siemens</li><li class="t-red">Profinet</li></ul>
           <h3><span class="l-it">Cella di pallettizzazione di fine linea</span><span class="l-en">End-of-line palletizing cell</span></h3>
-          <p class="meta mono">P-01 · CMA S.r.l.</p>
+          <p class="meta">CMA S.r.l.</p>
           <p><span class="l-it">Programmazione degli schemi di pallettizzazione, gestione del cambio formato da HMI e scambio segnali con il PLC di linea, fino all'avviamento presso il cliente.</span><span class="l-en">Palletizing pattern programming, format changeover from the HMI and signal exchange with the line PLC, through to on-site start-up.</span></p>
         </div>
-        <div class="shots" tabindex="0" aria-label="Galleria P-01">
-          <div class="shot" data-placeholder><span>01 · A</span></div><div class="shot" data-placeholder><span>01 · B</span></div><div class="shot" data-placeholder><span>01 · C</span></div><div class="shot" data-placeholder><span>01 · D</span></div>
+        <div class="shots" tabindex="0" aria-label="Galleria foto">
+          <div class="shot" data-placeholder><span>foto</span></div><div class="shot" data-placeholder><span>foto</span></div><div class="shot" data-placeholder><span>foto</span></div><div class="shot" data-placeholder><span>foto</span></div>
         </div>
       </article>
 
@@ -287,11 +275,11 @@
         <div class="project-text">
           <ul class="tags"><li class="t-cream">Cobot</li><li class="t-blue">Pick &amp; Place</li><li class="t-red">HMI</li></ul>
           <h3><span class="l-it">Pick &amp; place con robot collaborativo</span><span class="l-en">Collaborative pick &amp; place</span></h3>
-          <p class="meta mono">P-02 · CMA S.r.l.</p>
+          <p class="meta">CMA S.r.l.</p>
           <p><span class="l-it">Applicazione di prelievo e deposito con cobot, ottimizzazione delle traiettorie e dei punti di approccio per ridurre il tempo ciclo.</span><span class="l-en">Pick-and-place application with a cobot, tuning trajectories and approach points to reduce cycle time.</span></p>
         </div>
-        <div class="shots" tabindex="0" aria-label="Galleria P-02">
-          <div class="shot" data-placeholder><span>02 · A</span></div><div class="shot" data-placeholder><span>02 · B</span></div><div class="shot" data-placeholder><span>02 · C</span></div><div class="shot" data-placeholder><span>02 · D</span></div>
+        <div class="shots" tabindex="0" aria-label="Galleria foto">
+          <div class="shot" data-placeholder><span>foto</span></div><div class="shot" data-placeholder><span>foto</span></div><div class="shot" data-placeholder><span>foto</span></div><div class="shot" data-placeholder><span>foto</span></div>
         </div>
       </article>
 
@@ -299,11 +287,11 @@
         <div class="project-text">
           <ul class="tags"><li class="t-cream"><span class="l-it">Asservimento</span><span class="l-en">Machine tending</span></li><li class="t-blue"><span class="l-it">Robot industriale</span><span class="l-en">Industrial robot</span></li><li class="t-red">PLC</li></ul>
           <h3><span class="l-it">Asservimento macchina</span><span class="l-en">Machine tending cell</span></h3>
-          <p class="meta mono">P-03 · CMA S.r.l.</p>
+          <p class="meta">CMA S.r.l.</p>
           <p><span class="l-it">Carico e scarico automatico della macchina, handshake con il PLC, gestione allarmi e ripresa del ciclo dopo un arresto.</span><span class="l-en">Automatic machine loading and unloading, PLC handshake, alarm handling and cycle recovery after a stop.</span></p>
         </div>
-        <div class="shots" tabindex="0" aria-label="Galleria P-03">
-          <div class="shot" data-placeholder><span>03 · A</span></div><div class="shot" data-placeholder><span>03 · B</span></div><div class="shot" data-placeholder><span>03 · C</span></div><div class="shot" data-placeholder><span>03 · D</span></div>
+        <div class="shots" tabindex="0" aria-label="Galleria foto">
+          <div class="shot" data-placeholder><span>foto</span></div><div class="shot" data-placeholder><span>foto</span></div><div class="shot" data-placeholder><span>foto</span></div><div class="shot" data-placeholder><span>foto</span></div>
         </div>
       </article>
 
@@ -311,11 +299,11 @@
         <div class="project-text">
           <ul class="tags"><li class="t-cream"><span class="l-it">Movimentazione</span><span class="l-en">Material handling</span></li><li class="t-blue">EtherNet/IP</li><li class="t-red">Commissioning</li></ul>
           <h3><span class="l-it">Movimentazione automatizzata</span><span class="l-en">Automated material handling</span></h3>
-          <p class="meta mono">P-04 · CMA S.r.l.</p>
+          <p class="meta">CMA S.r.l.</p>
           <p><span class="l-it">Trasferimento pezzi tra stazioni con integrazione dei dispositivi di campo, debug e risoluzione dei problemi software direttamente su impianto.</span><span class="l-en">Part transfer between stations with field-device integration, plus on-site debugging and software troubleshooting.</span></p>
         </div>
-        <div class="shots" tabindex="0" aria-label="Galleria P-04">
-          <div class="shot" data-placeholder><span>04 · A</span></div><div class="shot" data-placeholder><span>04 · B</span></div><div class="shot" data-placeholder><span>04 · C</span></div><div class="shot" data-placeholder><span>04 · D</span></div>
+        <div class="shots" tabindex="0" aria-label="Galleria foto">
+          <div class="shot" data-placeholder><span>foto</span></div><div class="shot" data-placeholder><span>foto</span></div><div class="shot" data-placeholder><span>foto</span></div><div class="shot" data-placeholder><span>foto</span></div>
         </div>
       </article>
     </section>
@@ -328,20 +316,20 @@
         <li>
           <span class="when mono">10/2024 — <span class="l-it">oggi</span><span class="l-en">present</span></span>
           <div>
-            <h3>Software Analyst &amp; Designer · Robotics Specialist</h3>
-            <p class="where mono">CMA S.r.l. · Carinaro (CE)</p>
+            <h3>Software Analyst &amp; Designer, Robotics Specialist</h3>
+            <p class="where mono">CMA S.r.l., Carinaro (CE)</p>
             <p><span class="l-it">Analisi, progettazione, programmazione e avviamento di applicazioni robotiche su ABB, Comau, JAKA, Universal Robots, Dobot ed Efort. Integrazione con PLC Siemens, HMI e dispositivi di campo; commissioning e supporto tecnico presso i clienti, in team con progettazione elettrica e meccanica.</span><span class="l-en">Analysis, design, programming and commissioning of robotic applications on ABB, Comau, JAKA, Universal Robots, Dobot and Efort. Integration with Siemens PLCs, HMIs and field devices; on-site commissioning and technical support, working with electrical and mechanical design teams.</span></p>
           </div>
         </li>
         <li>
           <span class="when mono"><span class="l-it">in parallelo</span><span class="l-en">alongside</span></span>
           <div>
-            <h3><span class="l-it">Tecnico commerciale · fiere ed estero</span><span class="l-en">Technical sales · trade fairs &amp; international</span></h3>
+            <h3><span class="l-it">Tecnico commerciale, fiere ed estero</span><span class="l-en">Technical sales, trade fairs &amp; international</span></h3>
             <p class="where mono">CMA S.r.l.</p>
             <p><span class="l-it">Affianco l'area commerciale come riferimento tecnico: allo stand presento le soluzioni robotiche dell'azienda, rispondo alle domande tecniche dei visitatori e raccolgo i requisiti dei potenziali clienti da girare all'ufficio tecnico.</span><span class="l-en">I support the sales team as the technical point of contact: at the booth I present the company's robotic solutions, answer visitors' technical questions and gather prospects' requirements for the engineering team.</span></p>
             <ul class="bullets">
-              <li><b><span class="l-it">Fiere di settore</span><span class="l-en">Industry trade fairs</span></b> — <span class="l-it">presenza allo stand, demo e primi contatti con nuovi clienti.</span><span class="l-en">booth presence, demos and first contact with new customers.</span></li>
-              <li><b><span class="l-it">Missione in Cina</span><span class="l-en">Business trip to China</span></b> — <span class="l-it">incontri con produttori e fornitori per valutare componenti e avviare nuove collaborazioni.</span><span class="l-en">meetings with manufacturers and suppliers to assess components and open new partnerships.</span></li>
+              <li><b><span class="l-it">Fiere di settore</span><span class="l-en">Industry trade fairs</span></b>: <span class="l-it">presenza allo stand, demo e primi contatti con nuovi clienti.</span><span class="l-en">booth presence, demos and first contact with new customers.</span></li>
+              <li><b><span class="l-it">Missione in Cina</span><span class="l-en">Business trip to China</span></b>: <span class="l-it">incontri con produttori e fornitori per valutare componenti e avviare nuove collaborazioni.</span><span class="l-en">meetings with manufacturers and suppliers to assess components and open new partnerships.</span></li>
             </ul>
           </div>
         </li>
@@ -349,7 +337,7 @@
           <span class="when mono">09/2019 — 07/2024</span>
           <div>
             <h3><span class="l-it">Diploma in Elettrotecnica ed Elettronica</span><span class="l-en">Technical diploma in Electrical &amp; Electronic Engineering</span> <span class="pill pill--sm">100/100</span></h3>
-            <p class="where mono">ITS Luigi Galvani · Giugliano in Campania (NA)</p>
+            <p class="where mono">ITS Luigi Galvani, Giugliano in Campania (NA)</p>
             <p><span class="l-it">Articolazione Automazione, curvatura Robotica: sistemi automatici, elettronica, progettazione tecnica e robotica industriale con approfondimento ABB.</span><span class="l-en">Automation track with a robotics focus: automatic systems, electronics, technical design and industrial robotics, with in-depth ABB training.</span></p>
           </div>
         </li>
@@ -358,9 +346,9 @@
           <div>
             <h3><span class="l-it">Formazione e progetti</span><span class="l-en">Training &amp; projects</span></h3>
             <ul class="bullets">
-              <li><b><span class="l-it">Formazione ABB</span><span class="l-en">ABB training</span></b> — <span class="l-it">programmazione e funzionamento dei robot industriali, con esercitazioni pratiche.</span><span class="l-en">industrial robot programming and operation, with hands-on exercises.</span></li>
-              <li><b><span class="l-it">Formazione 3EM</span><span class="l-en">3EM training</span></b> — <span class="l-it">ingegneria e manutenzione applicate agli impianti industriali.</span><span class="l-en">engineering and maintenance for industrial plants.</span></li>
-              <li><b><span class="l-it">Erasmus a Siviglia</span><span class="l-en">Erasmus in Seville</span></b> — <span class="l-it">studio all'estero, competenze interculturali e linguistiche.</span><span class="l-en">study abroad, intercultural and language skills.</span></li>
+              <li><b><span class="l-it">Formazione ABB</span><span class="l-en">ABB training</span></b>: <span class="l-it">programmazione e funzionamento dei robot industriali, con esercitazioni pratiche.</span><span class="l-en">industrial robot programming and operation, with hands-on exercises.</span></li>
+              <li><b><span class="l-it">Formazione 3EM</span><span class="l-en">3EM training</span></b>: <span class="l-it">ingegneria e manutenzione applicate agli impianti industriali.</span><span class="l-en">engineering and maintenance for industrial plants.</span></li>
+              <li><b><span class="l-it">Erasmus a Siviglia</span><span class="l-en">Erasmus in Seville</span></b>: <span class="l-it">studio all'estero, competenze interculturali e linguistiche.</span><span class="l-en">study abroad, intercultural and language skills.</span></li>
             </ul>
           </div>
         </li>
@@ -374,26 +362,22 @@
 
       <div class="modules">
         <div class="module">
-          <p class="module-id mono">IO-01 <i class="led"></i></p>
           <h3><span class="l-it">Robotica industriale</span><span class="l-en">Industrial robotics</span></h3>
-          <ul><li>ABB RobotStudio / RobotWare</li><li>ABB · Comau · KUKA · FANUC</li><li>Universal Robots · JAKA · Dobot · Efort</li><li><span class="l-it">Pallettizzazione · pick &amp; place · asservimento</span><span class="l-en">Palletizing · pick &amp; place · tending</span></li></ul>
+          <ul><li>ABB RobotStudio / RobotWare</li><li>ABB, Comau, KUKA, FANUC</li><li>Universal Robots, JAKA, Dobot, Efort</li><li><span class="l-it">Pallettizzazione, pick &amp; place, asservimento</span><span class="l-en">Palletizing, pick &amp; place, tending</span></li></ul>
         </div>
         <div class="module">
-          <p class="module-id mono">IO-02 <i class="led"></i></p>
           <h3><span class="l-it">Automazione</span><span class="l-en">Automation</span></h3>
-          <ul><li>PLC Siemens S7-1200</li><li>TIA Portal · Ladder</li><li><span class="l-it">HMI e supervisione</span><span class="l-en">HMI &amp; supervision</span></li><li>Profinet · EtherNet/IP</li></ul>
+          <ul><li>PLC Siemens S7-1200</li><li>TIA Portal, Ladder</li><li><span class="l-it">HMI e supervisione</span><span class="l-en">HMI &amp; supervision</span></li><li>Profinet, EtherNet/IP</li></ul>
         </div>
         <div class="module">
-          <p class="module-id mono">IO-03 <i class="led"></i></p>
           <h3><span class="l-it">Software e progettazione</span><span class="l-en">Software &amp; design</span></h3>
-          <ul><li>C++ · Python <span class="l-it">(base)</span><span class="l-en">(basic)</span></li><li>Visual Studio Code</li><li>AutoCAD 2D/3D</li><li>SolidWorks <span class="l-it">(base)</span><span class="l-en">(basic)</span></li></ul>
+          <ul><li>C++, Python <span class="l-it">(base)</span><span class="l-en">(basic)</span></li><li>Visual Studio Code</li><li>AutoCAD 2D/3D</li><li>SolidWorks <span class="l-it">(base)</span><span class="l-en">(basic)</span></li></ul>
         </div>
         <div class="module">
-          <p class="module-id mono">IO-04 <i class="led"></i></p>
           <h3><span class="l-it">Lingue</span><span class="l-en">Languages</span></h3>
           <ul class="lang-rows">
             <li><span><span class="l-it">Italiano</span><span class="l-en">Italian</span></span><span><span class="l-it">madrelingua</span><span class="l-en">native</span></span></li>
-            <li><span><span class="l-it">Inglese</span><span class="l-en">English</span></span><span>C1 · B2</span></li>
+            <li><span><span class="l-it">Inglese</span><span class="l-en">English</span></span><span>C1, B2</span></li>
           </ul>
           <p class="module-foot mono"><span class="l-it">+ comunicazione tecnica con clienti, fiere e fornitori esteri</span><span class="l-en">+ technical communication with clients, at trade fairs and with foreign suppliers</span></p>
         </div>
@@ -410,7 +394,7 @@
         <span class="badge-top mono">EXHIBITOR</span>
         <svg class="badge-glyph" viewBox="0 0 48 48"><use href="#g-cobot"/></svg>
         <span class="badge-name">Matteo<br>Capitano</span>
-        <span class="badge-role mono">Robotics Specialist · CMA S.r.l.</span>
+        <span class="badge-role mono">Robotics Specialist<br>CMA S.r.l.</span>
         <span class="badge-bars"></span>
       </div>
     </div>
@@ -427,13 +411,13 @@
         <ul><li>matticapitano80@gmail.com</li><li>matticapitano80@gmail.com</li><li>matticapitano80@gmail.com</li></ul>
       </div>
     </div>
-    <p class="fineprint mono">© <span id="year">2026</span> Matteo Capitano · <span class="l-it">fatto a mano, senza teach pendant</span><span class="l-en">handmade, no teach pendant needed</span></p>
+    <p class="fineprint">© <span id="year">2026</span> Matteo Capitano</p>
   </footer>
 
   <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js" defer></script>
-  <script src="main.js?v=20261105111217" defer></script>
+  <script src="main.js?v=20261105112115" defer></script>
   <script type="module">
-    const go = () => import("./cobot.js?v=20261105111217");
+    const go = () => import("./cobot.js?v=20261105112115");
     if ("requestIdleCallback" in window) requestIdleCallback(go, { timeout: 1200 }); else setTimeout(go, 300);
   </script>
 </body>

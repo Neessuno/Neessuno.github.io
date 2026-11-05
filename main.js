@@ -96,7 +96,7 @@
       const rect = t.getBoundingClientRect();
       if (rect.bottom < 0 || rect.top > vh) continue;
       const p = clamp((vh - rect.top) / (vh + rect.height), 0, 1);
-      t.style.transform = `translate3d(${(0.5 - p) * 80}px, 0, 0)`;
+      t.style.transform = `translate3d(${(0.5 - p) * Math.min(80, window.innerWidth * 0.05)}px, 0, 0)`;
     }
 
     /* strisce scorrevoli: accelerano con la velocità di scroll */
