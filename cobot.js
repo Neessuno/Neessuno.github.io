@@ -38,7 +38,7 @@ function init() {
   scene.environmentIntensity = 0.5;
 
   const camera = new THREE.PerspectiveCamera(28, 1, 0.1, 60);
-  const LOOK = new V3(0.5, 0.68, 0.38);
+  const LOOK = new V3(0.5, 0.58, 0.38);
   const CAM_DIR = new V3(1.0, 0.6, 1.3).normalize();
   const CAM_AZ = Math.atan2(-CAM_DIR.z, CAM_DIR.x);
   let camDist = 6.4;
@@ -128,42 +128,57 @@ function init() {
     return g;
   }
 
-  const D1 = 0.5;             // altezza asse spalla
-  const L1 = 0.9, L2 = 0.8;   // braccio, avambraccio
-  const WR = 0.3;             // cilindro del polso (verso la flangia)
-  const GL = 0.26;            // flangia → TCP (centro presa)
-  const TOOL = WR + GL;
-  const SIDE = 0.18;          // braccio spostato di lato rispetto alla colonna
+  /* Misure reali del CRB 15000 12/1.27 (parametri DH, mm) scalate alla scena */
+  const S = 1.27 / 1000;
+  const D1 = 338 * S;          // base → asse spalla
+  const L1 = 707 * S;          // braccio
+  const EA = 110 * S;          // offset del gomito
+  const L2 = 534 * S;          // avambraccio
+  const WO = 80 * S;           // offset del polso
+  const FL = 101 * S;          // polso → flangia
+  const GL = 0.26;             // flangia → TCP (centro presa)
+  const TOOL = FL + GL;
+  const LE = Math.hypot(L2, EA), DELTA = Math.atan2(L2, EA);
+  const SIDE = 0.17;           // braccio spostato di lato rispetto alla colonna
 
   const robot = new THREE.Group();
   scene.add(robot);
-  robot.add(at(mesh(new RoundedBoxGeometry(0.38, 0.04, 0.38, 2, 0.012), mat.grey), 0, 0.02, 0));
-  for (const x of [-0.15, 0.15]) for (const z of [-0.15, 0.15]) robot.add(at(mesh(cyl(0.014, 0.014, 0.012, 16), mat.dark), x, 0.046, z));
-  robot.add(at(mesh(cyl(0.118, 0.135, 0.3, 64), mat.grey), 0, 0.19, 0));
-  robot.add(at(mesh(cyl(0.122, 0.122, 0.012, 64), mat.dark), 0, 0.336, 0));
+  // base: piastra con bulloni, colonna, anello
+  robot.add(at(mesh(new RoundedBoxGeometry(0.36, 0.035, 0.36, 2, 0.012), mat.grey), 0, 0.0175, 0));
+  for (const x of [-0.14, 0.14]) for (const z of [-0.14, 0.14]) robot.add(at(mesh(cyl(0.013, 0.013, 0.012, 16), mat.dark), x, 0.04, z));
+  robot.add(at(mesh(cyl(0.112, 0.13, 0.2, 64), mat.grey), 0, 0.135, 0));
+  robot.add(at(mesh(cyl(0.116, 0.116, 0.01, 64), mat.dark), 0, 0.24, 0));
 
-  const j1 = new THREE.Group(); j1.position.y = 0.34; robot.add(j1);
-  j1.add(at(mesh(cyl(0.118, 0.118, 0.07, 64), mat.grey), 0, 0.035, 0));
+  const j1 = new THREE.Group(); j1.position.y = 0.245; robot.add(j1);
+  j1.add(at(mesh(cyl(0.112, 0.112, D1 - 0.245, 64), mat.grey), 0, (D1 - 0.245) / 2, 0));
 
-  const j2 = new THREE.Group(); j2.position.y = D1 - 0.34; j1.add(j2);
-  j2.add(at(housing(0.128, 0.34, mat.grey), 0, 0, SIDE * 0.5));
-  j2.add(at(mesh(new RoundedBoxGeometry(0.17, L1, 0.13, 4, 0.055), mat.grey), 0, L1 / 2, SIDE));
+  // spalla: carter orizzontale che sporge verso il braccio
+  const j2 = new THREE.Group(); j2.position.y = D1 - 0.245; j1.add(j2);
+  j2.add(at(housing(0.125, 0.36, mat.grey), 0, 0, SIDE * 0.55));
+  j2.add(at(mesh(cyl(0.09, 0.105, 0.12, 48), mat.grey), 0, 0.09, SIDE));                 // raccordo
+  j2.add(at(mesh(new RoundedBoxGeometry(0.15, L1 - 0.12, 0.12, 4, 0.05), mat.grey), 0, L1 / 2, SIDE));
+  j2.add(at(mesh(cyl(0.105, 0.085, 0.12, 48), mat.grey), 0, L1 - 0.09, SIDE));           // raccordo
 
+  // gomito: carter grigio, poi il blocco bianco che sale dell'offset e l'avambraccio in avanti
   const j3 = new THREE.Group(); j3.position.y = L1; j2.add(j3);
-  j3.add(at(housing(0.108, 0.33, mat.grey), 0, 0, SIDE * 0.5));
-  j3.add(at(mesh(new RoundedBoxGeometry(0.13, L2, 0.115, 4, 0.05), mat.white), 0, L2 / 2, 0));
+  j3.add(at(housing(0.108, 0.34, mat.grey), 0, 0, SIDE * 0.5));
+  j3.add(at(mesh(new RoundedBoxGeometry(0.17, EA + 0.12, 0.13, 4, 0.06), mat.white), 0.02, EA / 2, 0));
+  const fore = new THREE.Group(); fore.position.set(0, EA, 0); j3.add(fore);
+  fore.add(at(mesh(new RoundedBoxGeometry(L2 - 0.06, 0.115, 0.115, 4, 0.05), mat.white), (L2 - 0.06) / 2 + 0.03, 0, 0));
+  const seam = mesh(cyl(0.062, 0.062, 0.012, 48), mat.dark); seam.rotation.z = Math.PI / 2; fore.add(at(seam, 0.16, 0, 0));        // giunto di rollio J4
+  const btn = mesh(cyl(0.02, 0.02, 0.006, 24), mat.dark); btn.rotation.x = Math.PI / 2; fore.add(at(btn, L2 * 0.62, 0, 0.06));     // pulsante sul fianco
 
-  const j4 = new THREE.Group(); j4.position.y = L2; j3.add(j4);
-  j4.add(housing(0.088, 0.2, mat.white));
+  // polso: carter J5 bianco, cilindro J6 spostato in avanti con anello LED, flangia
+  const j4 = new THREE.Group(); j4.position.set(L2, EA, 0); j3.add(j4);
+  j4.add(housing(0.085, 0.19, mat.white));
+  const j5 = new THREE.Group(); j5.position.set(-WO, 0, 0); j4.add(j5);
+  j5.add(at(mesh(cyl(0.074, 0.074, FL + 0.04, 64), mat.white), 0, (FL - 0.04) / 2, 0));
+  j5.add(at(mesh(cyl(0.0755, 0.0755, 0.018, 64), mat.led, false), 0, 0.012, 0));
+  j5.add(at(mesh(cyl(0.0755, 0.0755, 0.008, 64), mat.dark), 0, FL - 0.006, 0));
 
-  const j5 = new THREE.Group(); j4.add(j5);
-  j5.add(at(mesh(cyl(0.078, 0.078, WR - 0.03, 64), mat.white), 0, (WR - 0.03) / 2 + 0.03, 0));
-  j5.add(at(mesh(cyl(0.0795, 0.0795, 0.02, 64), mat.led, false), 0, 0.12, 0));
-  j5.add(at(mesh(cyl(0.0795, 0.0795, 0.008, 64), mat.dark), 0, WR - 0.006, 0));
-
-  const j6 = new THREE.Group(); j6.position.y = WR; j5.add(j6);
-  j6.add(at(mesh(cyl(0.062, 0.066, 0.03, 48), mat.alu), 0, 0.015, 0));
-  j6.add(at(mesh(cyl(0.05, 0.05, 0.012, 48), mat.dark), 0, 0.036, 0));
+  const j6 = new THREE.Group(); j6.position.y = FL; j5.add(j6);
+  j6.add(at(mesh(cyl(0.06, 0.064, 0.026, 48), mat.alu), 0, 0.013, 0));
+  j6.add(at(mesh(cyl(0.05, 0.05, 0.012, 48), mat.dark), 0, 0.032, 0));
   j6.add(at(mesh(new RoundedBoxGeometry(0.21, 0.09, 0.1, 3, 0.02), mat.dark), 0, 0.087, 0));
   j6.add(at(mesh(new THREE.BoxGeometry(0.24, 0.016, 0.03), mat.alu), 0, 0.135, 0));
   function finger(side) {
@@ -177,6 +192,7 @@ function init() {
   const OPEN = 0.155, CLOSED = 0.1225;
   let grip = OPEN;
 
+  // q = [J1, angolo assoluto braccio, gomito (relativo), polso (relativo), rollio, J6]
   function applyJoints(q) {
     j1.rotation.y = q[0];
     j2.rotation.z = -q[1];
@@ -194,22 +210,24 @@ function init() {
   function ik(p, pitch = 0, roll = 0, out = new Array(6)) {
     const r = Math.hypot(p.x, p.z);
     const q1 = Math.atan2(-p.z, p.x);
-    const dx = r, dy = p.y + TOOL - D1;
+    // centro polso: il cilindro J6 è avanti di WO rispetto al polso, la flangia sotto
+    const dx = r - WO * Math.cos(pitch), dy = p.y + TOOL - D1 - WO * Math.sin(pitch);
     const D = Math.max(1e-6, Math.hypot(dx, dy));
-    const Dc = clamp(D, Math.abs(L1 - L2) + 0.05, L1 + L2 - 0.005);
+    const Dc = clamp(D, Math.abs(L1 - LE) + 0.05, L1 + LE - 0.005);
     const k = Dc / D;
     const wx = dx * k, wy = dy * k;
     const phi = Math.atan2(wx, wy);
-    const beta = Math.acos(clamp((L1 * L1 + Dc * Dc - L2 * L2) / (2 * L1 * Dc), -1, 1));
-    const t2 = phi - beta;                       // gomito alto
+    const beta = Math.acos(clamp((L1 * L1 + Dc * Dc - LE * LE) / (2 * L1 * Dc), -1, 1));
+    const t2 = phi - beta;                              // gomito alto
     const ex = L1 * Math.sin(t2), ey = L1 * Math.cos(t2);
-    const t3 = Math.atan2(wx - ex, wy - ey);
+    const t3 = Math.atan2(wx - ex, wy - ey);            // direzione gomito → polso
+    const f3 = t3 - DELTA;                              // orientamento del telaio del gomito
     out[0] = q1;
     out[1] = t2;
-    out[2] = t3 - t2;
-    out[3] = Math.PI - t3 - pitch;               // flangia verso il basso
+    out[2] = f3 - t2;
+    out[3] = Math.PI - pitch - f3;                      // flangia verso il basso
     out[4] = roll;
-    out[5] = wrapQuarter(q1 + Math.PI);          // pinza allineata alle scatole
+    out[5] = wrapQuarter(q1 + Math.PI);                 // pinza allineata alle scatole
     return out;
   }
 
@@ -405,7 +423,7 @@ function init() {
     if (!wpx || !hpx) return;
     renderer.setSize(wpx, hpx, false);
     camera.aspect = wpx / hpx;
-    camDist = 5.1 * Math.pow(Math.max(1, 1.75 / camera.aspect), 0.75);
+    camDist = 4.4 * Math.pow(Math.max(1, 1.75 / camera.aspect), 0.75);
     camera.updateProjectionMatrix();
     placeCamera();
     if (reduced) renderer.render(scene, camera);
