@@ -1,0 +1,245 @@
+<!doctype html>
+<html lang="it" class="lang-it">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Matteo Capitano — Robotics Software Specialist</title>
+  <meta name="description" content="Matteo Capitano, Robotics & Industrial Automation Software Specialist. Programmazione robot industriali e collaborativi, integrazione PLC Siemens, HMI, Profinet ed EtherNet/IP.">
+  <meta property="og:title" content="Matteo Capitano — Robotics Software Specialist">
+  <meta property="og:description" content="Celle robotizzate per pallettizzazione, pick & place e asservimento macchina. Dall'analisi al collaudo.">
+  <meta name="theme-color" content="#EDEBE5">
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <a class="skip" href="#main"><span class="l-it">Vai al contenuto</span><span class="l-en">Skip to content</span></a>
+
+  <!-- ============ HEADER ============ -->
+  <header class="topbar">
+    <a href="#top" class="logo" aria-label="Matteo Capitano — home">
+      <svg viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="20" r="19" /><text x="20" y="25.5" text-anchor="middle">MC</text></svg>
+    </a>
+    <nav class="nav" aria-label="Principale">
+      <a href="#work"><span class="l-it">progetti</span><span class="l-en">work</span></a>
+      <a href="#about"><span class="l-it">percorso</span><span class="l-en">about</span></a>
+      <a href="#skills"><span class="l-it">competenze</span><span class="l-en">skills</span></a>
+      <a href="#contact"><span class="l-it">contatti</span><span class="l-en">contact</span></a>
+    </nav>
+    <div class="topbar-right">
+      <span class="status mono" title="Napoli, Italia"><i class="led"></i>AUTO · NA, IT</span>
+      <div class="lang-toggle mono" role="group" aria-label="Lingua / Language">
+        <button type="button" data-lang="it" aria-pressed="true">IT</button>
+        <button type="button" data-lang="en" aria-pressed="false">EN</button>
+      </div>
+    </div>
+  </header>
+
+  <main id="main">
+    <!-- ============ HERO ============ -->
+    <section class="hero" id="top">
+      <div class="hero-text">
+        <p class="eyebrow mono">// Robotics &amp; Industrial Automation Software Specialist</p>
+        <h1 class="headline">
+          <span class="l-it">insegno <span class="glyph" aria-hidden="true"><svg viewBox="0 0 32 32"><path d="M6 27h12M12 27v-6l6-9 8 3M18 12l-2-5" /><circle cx="12" cy="21" r="2"/><circle cx="18" cy="12" r="2"/></svg></span> ai robot · a muoversi <span class="glyph glyph--line" aria-hidden="true"><svg viewBox="0 0 32 32"><path d="M4 24 C10 24 10 8 16 8 S22 24 28 24" stroke-dasharray="3 3"/><circle cx="4" cy="24" r="2.2"/><circle cx="28" cy="24" r="2.2"/></svg></span> con precisione · il tempo ciclo <span class="glyph" aria-hidden="true"><svg viewBox="0 0 32 32"><circle cx="16" cy="17" r="10"/><path d="M16 11v6l4 3M13 4h6"/></svg></span> è la sfida</span>
+          <span class="l-en">teaching <span class="glyph" aria-hidden="true"><svg viewBox="0 0 32 32"><path d="M6 27h12M12 27v-6l6-9 8 3M18 12l-2-5" /><circle cx="12" cy="21" r="2"/><circle cx="18" cy="12" r="2"/></svg></span> robots · to move <span class="glyph glyph--line" aria-hidden="true"><svg viewBox="0 0 32 32"><path d="M4 24 C10 24 10 8 16 8 S22 24 28 24" stroke-dasharray="3 3"/><circle cx="4" cy="24" r="2.2"/><circle cx="28" cy="24" r="2.2"/></svg></span> with precision · cycle time <span class="glyph" aria-hidden="true"><svg viewBox="0 0 32 32"><circle cx="16" cy="17" r="10"/><path d="M16 11v6l4 3M13 4h6"/></svg></span> is the game</span>
+        </h1>
+        <p class="version mono"><span class="l-it">(v1.0) — Nuovi progetti in arrivo.</span><span class="l-en">(v1.0) — More projects on the way.</span></p>
+      </div>
+
+      <!-- Braccio robot 2D interattivo (segue il cursore) -->
+      <figure class="arm-cell" aria-label="Braccio robotico interattivo">
+        <div class="arm-hud mono" aria-hidden="true">
+          <span>J1 <b id="j1">0.0</b>°</span>
+          <span>J2 <b id="j2">0.0</b>°</span>
+          <span>TCP X <b id="tx">0</b></span>
+          <span>Y <b id="ty">0</b></span>
+        </div>
+        <svg id="arm" viewBox="0 0 400 320" role="img" aria-hidden="true">
+          <defs>
+            <pattern id="grid" width="20" height="20" patternUnits="userSpaceOnUse"><path d="M20 0H0V20" class="grid-line"/></pattern>
+          </defs>
+          <rect width="400" height="320" fill="url(#grid)"/>
+          <circle id="reach" cx="200" cy="280" r="230" class="reach"/>
+          <line x1="20" y1="296" x2="380" y2="296" class="floor"/>
+          <!-- pallet -->
+          <g class="pallet"><rect x="292" y="262" width="76" height="8"/><rect x="296" y="270" width="8" height="10"/><rect x="326" y="270" width="8" height="10"/><rect x="356" y="270" width="8" height="10"/></g>
+          <g class="boxes"><rect x="300" y="238" width="30" height="24"/><rect x="332" y="238" width="30" height="24"/></g>
+          <!-- target -->
+          <g id="target" class="target"><circle r="7"/><path d="M-12 0H-4M4 0H12M0 -12V-4M0 4V12"/></g>
+          <!-- base -->
+          <rect x="176" y="282" width="48" height="14" rx="2" class="base"/>
+          <path d="M184 282 L190 266 H210 L216 282Z" class="base"/>
+          <!-- links -->
+          <g id="link1"><rect x="-10" y="-10" width="140" height="20" rx="10" class="link"/></g>
+          <g id="link2"><rect x="-8" y="-8" width="120" height="16" rx="8" class="link link--2"/>
+            <g id="gripper" transform="translate(112 0)"><rect x="0" y="-12" width="6" height="24" class="grip"/><rect x="6" y="-12" width="14" height="5" class="grip"/><rect x="6" y="7" width="14" height="5" class="grip"/></g>
+          </g>
+          <circle id="joint1" r="9" class="joint"/>
+          <circle id="joint2" r="7" class="joint"/>
+        </svg>
+        <figcaption class="mono"><span class="l-it">↖ muovi il cursore (o trascina il dito sulla cella): il TCP segue il target</span><span class="l-en">↖ move your cursor (or drag on the cell): the TCP follows the target</span></figcaption>
+      </figure>
+    </section>
+
+    <!-- ============ INTRO ============ -->
+    <section class="intro">
+      <p class="l-it">Sono <b>Matteo Capitano</b>, programmatore di robot industriali e collaborativi. Analizzo, progetto, programmo e avvio <b>celle robotizzate</b> per <i>pallettizzazione</i>, <i>pick &amp; place</i>, <i>asservimento macchina</i> e movimentazione automatizzata, dall'analisi dei requisiti fino al <b>collaudo dal cliente</b>. Oggi sono Software Analyst &amp; Designer in <b>CMA S.r.l.</b> Benvenuto in cella!</p>
+      <p class="l-en">I'm <b>Matteo Capitano</b>, an industrial and collaborative robot programmer. I analyse, design, program and commission <b>robotic cells</b> for <i>palletizing</i>, <i>pick &amp; place</i>, <i>machine tending</i> and automated handling, from requirements analysis all the way to <b>on-site acceptance</b>. Currently Software Analyst &amp; Designer at <b>CMA S.r.l.</b> Welcome to the cell!</p>
+    </section>
+
+    <!-- ============ MARQUEE ============ -->
+    <div class="marquee" aria-label="Tecnologie / Technologies">
+      <div class="marquee-track mono">
+        <ul>
+          <li>ABB</li><li>Comau</li><li>KUKA</li><li>FANUC</li><li>Universal Robots</li><li>JAKA</li><li>Dobot</li><li>Efort</li><li>Siemens S7-1200</li><li>TIA Portal</li><li>Profinet</li><li>EtherNet/IP</li><li>RobotStudio</li>
+        </ul>
+        <ul aria-hidden="true">
+          <li>ABB</li><li>Comau</li><li>KUKA</li><li>FANUC</li><li>Universal Robots</li><li>JAKA</li><li>Dobot</li><li>Efort</li><li>Siemens S7-1200</li><li>TIA Portal</li><li>Profinet</li><li>EtherNet/IP</li><li>RobotStudio</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- ============ PROGETTI ============
+         Per sostituire i segnaposto: dentro .media metti
+         <img src="assets/projects/01.jpg" alt="..."> oppure
+         <video src="assets/projects/01.mp4" autoplay muted loop playsinline></video>
+         e rimuovi l'attributo data-placeholder. -->
+    <section class="section" id="work">
+      <header class="section-head">
+        <span class="section-index mono">01</span>
+        <h2><span class="l-it">Progetti in evidenza</span><span class="l-en">Featured works</span></h2>
+        <p class="section-note mono"><span class="l-it">Clienti riservati · NDA</span><span class="l-en">Confidential clients · NDA</span></p>
+      </header>
+
+      <div class="projects">
+        <article class="project">
+          <div class="media" data-placeholder><span class="mono">FOTO / VIDEO — 01</span></div>
+          <div class="project-meta mono"><span>P-01</span><span>CMA S.r.l.</span></div>
+          <ul class="tags mono"><li><span class="l-it">Pallettizzazione</span><span class="l-en">Palletizing</span></li><li>ABB</li><li>PLC Siemens</li><li>Profinet</li></ul>
+          <h3><span class="l-it">Cella di pallettizzazione di fine linea</span><span class="l-en">End-of-line palletizing cell</span></h3>
+          <p><span class="l-it">Programmazione degli schemi di pallettizzazione, gestione del cambio formato da HMI e scambio segnali con il PLC di linea, fino all'avviamento presso il cliente.</span><span class="l-en">Palletizing pattern programming, format changeover from the HMI and signal exchange with the line PLC, through to on-site start-up.</span></p>
+        </article>
+
+        <article class="project">
+          <div class="media" data-placeholder><span class="mono">FOTO / VIDEO — 02</span></div>
+          <div class="project-meta mono"><span>P-02</span><span>CMA S.r.l.</span></div>
+          <ul class="tags mono"><li>Cobot</li><li>Pick &amp; Place</li><li>HMI</li></ul>
+          <h3><span class="l-it">Pick &amp; place con robot collaborativo</span><span class="l-en">Collaborative pick &amp; place</span></h3>
+          <p><span class="l-it">Applicazione di prelievo e deposito con cobot, ottimizzazione delle traiettorie e dei punti di approccio per ridurre il tempo ciclo.</span><span class="l-en">Pick-and-place application with a cobot, tuning trajectories and approach points to reduce cycle time.</span></p>
+        </article>
+
+        <article class="project">
+          <div class="media" data-placeholder><span class="mono">FOTO / VIDEO — 03</span></div>
+          <div class="project-meta mono"><span>P-03</span><span>CMA S.r.l.</span></div>
+          <ul class="tags mono"><li><span class="l-it">Asservimento macchina</span><span class="l-en">Machine tending</span></li><li><span class="l-it">Robot industriale</span><span class="l-en">Industrial robot</span></li></ul>
+          <h3><span class="l-it">Asservimento macchina</span><span class="l-en">Machine tending cell</span></h3>
+          <p><span class="l-it">Carico e scarico automatico della macchina, handshake con il PLC, gestione allarmi e ripresa del ciclo dopo un arresto.</span><span class="l-en">Automatic machine loading and unloading, PLC handshake, alarm handling and cycle recovery after a stop.</span></p>
+        </article>
+
+        <article class="project">
+          <div class="media" data-placeholder><span class="mono">FOTO / VIDEO — 04</span></div>
+          <div class="project-meta mono"><span>P-04</span><span>CMA S.r.l.</span></div>
+          <ul class="tags mono"><li><span class="l-it">Movimentazione</span><span class="l-en">Material handling</span></li><li>EtherNet/IP</li><li>Commissioning</li></ul>
+          <h3><span class="l-it">Movimentazione automatizzata</span><span class="l-en">Automated material handling</span></h3>
+          <p><span class="l-it">Trasferimento pezzi tra stazioni con integrazione dei dispositivi di campo, debug e risoluzione dei problemi software direttamente su impianto.</span><span class="l-en">Part transfer between stations with field-device integration, plus on-site debugging and software troubleshooting.</span></p>
+        </article>
+      </div>
+    </section>
+
+    <!-- ============ PERCORSO ============ -->
+    <section class="section" id="about">
+      <header class="section-head">
+        <span class="section-index mono">02</span>
+        <h2><span class="l-it">Percorso</span><span class="l-en">Path</span></h2>
+      </header>
+
+      <ol class="timeline">
+        <li>
+          <span class="when mono">10/2024 — <span class="l-it">oggi</span><span class="l-en">present</span></span>
+          <div>
+            <h3>Software Analyst &amp; Designer · Robotics Specialist</h3>
+            <p class="where mono">CMA S.r.l. · Carinaro (CE)</p>
+            <p><span class="l-it">Analisi, progettazione, programmazione e avviamento di applicazioni robotiche su ABB, Comau, JAKA, Universal Robots, Dobot ed Efort. Integrazione con PLC Siemens, HMI e dispositivi di campo; commissioning e supporto tecnico presso i clienti, in team con progettazione elettrica e meccanica.</span><span class="l-en">Analysis, design, programming and commissioning of robotic applications on ABB, Comau, JAKA, Universal Robots, Dobot and Efort. Integration with Siemens PLCs, HMIs and field devices; on-site commissioning and technical support, working with electrical and mechanical design teams.</span></p>
+          </div>
+        </li>
+        <li>
+          <span class="when mono">09/2019 — 07/2024</span>
+          <div>
+            <h3><span class="l-it">Diploma in Elettrotecnica ed Elettronica</span><span class="l-en">Technical diploma in Electrical &amp; Electronic Engineering</span> <span class="badge mono">100/100</span></h3>
+            <p class="where mono">ITS Luigi Galvani · Giugliano in Campania (NA)</p>
+            <p><span class="l-it">Articolazione Automazione, curvatura Robotica: sistemi automatici, elettronica, progettazione tecnica e robotica industriale con approfondimento ABB.</span><span class="l-en">Automation track with a robotics focus: automatic systems, electronics, technical design and industrial robotics, with in-depth ABB training.</span></p>
+          </div>
+        </li>
+        <li>
+          <span class="when mono">2021 — 2024</span>
+          <div>
+            <h3><span class="l-it">Formazione e progetti</span><span class="l-en">Training &amp; projects</span></h3>
+            <ul class="bullets">
+              <li><b><span class="l-it">Formazione ABB</span><span class="l-en">ABB training</span></b> — <span class="l-it">programmazione e funzionamento dei robot industriali, con esercitazioni pratiche.</span><span class="l-en">industrial robot programming and operation, with hands-on exercises.</span></li>
+              <li><b><span class="l-it">Formazione 3EM</span><span class="l-en">3EM training</span></b> — <span class="l-it">ingegneria e manutenzione applicate agli impianti industriali.</span><span class="l-en">engineering and maintenance for industrial plants.</span></li>
+              <li><b><span class="l-it">Erasmus a Siviglia</span><span class="l-en">Erasmus in Seville</span></b> — <span class="l-it">studio all'estero, competenze interculturali e linguistiche.</span><span class="l-en">study abroad, intercultural and language skills.</span></li>
+            </ul>
+          </div>
+        </li>
+      </ol>
+    </section>
+
+    <!-- ============ COMPETENZE ============ -->
+    <section class="section" id="skills">
+      <header class="section-head">
+        <span class="section-index mono">03</span>
+        <h2><span class="l-it">Competenze</span><span class="l-en">Skills</span></h2>
+      </header>
+
+      <div class="modules">
+        <div class="module">
+          <p class="module-id mono">IO-01 <i class="led"></i></p>
+          <h3><span class="l-it">Robotica industriale</span><span class="l-en">Industrial robotics</span></h3>
+          <ul class="mono"><li>ABB RobotStudio / RobotWare</li><li>ABB · Comau · KUKA · FANUC</li><li>Universal Robots · JAKA · Dobot · Efort</li><li><span class="l-it">Pallettizzazione · pick &amp; place · asservimento</span><span class="l-en">Palletizing · pick &amp; place · tending</span></li></ul>
+        </div>
+        <div class="module">
+          <p class="module-id mono">IO-02 <i class="led"></i></p>
+          <h3><span class="l-it">Automazione</span><span class="l-en">Automation</span></h3>
+          <ul class="mono"><li>PLC Siemens S7-1200</li><li>TIA Portal · Ladder</li><li><span class="l-it">HMI e supervisione</span><span class="l-en">HMI &amp; supervision</span></li><li>Profinet · EtherNet/IP</li></ul>
+        </div>
+        <div class="module">
+          <p class="module-id mono">IO-03 <i class="led"></i></p>
+          <h3><span class="l-it">Software e progettazione</span><span class="l-en">Software &amp; design</span></h3>
+          <ul class="mono"><li>C++ · Python <span class="l-it">(base)</span><span class="l-en">(basic)</span></li><li>Visual Studio Code</li><li>AutoCAD 2D/3D</li><li>SolidWorks <span class="l-it">(base)</span><span class="l-en">(basic)</span></li></ul>
+        </div>
+        <div class="module">
+          <p class="module-id mono">IO-04 <i class="led"></i></p>
+          <h3><span class="l-it">Lingue</span><span class="l-en">Languages</span></h3>
+          <ul class="mono lang-bars">
+            <li><span><span class="l-it">Italiano</span><span class="l-en">Italian</span></span><span class="l-it">madrelingua</span><span class="l-en">native</span></li>
+            <li><span><span class="l-it">Inglese</span><span class="l-en">English</span></span>C1 · B2</li>
+          </ul>
+          <p class="module-foot mono"><span class="l-it">+ comunicazione tecnica con clienti e team multidisciplinari</span><span class="l-en">+ technical communication with clients and cross-functional teams</span></p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ============ CONTATTI ============ -->
+  <footer class="contact" id="contact">
+    <p class="eyebrow mono"><span class="l-it">// altrove</span><span class="l-en">// elsewhere</span></p>
+    <a class="cta" href="mailto:matticapitano80@gmail.com"><span class="l-it">parliamo del tuo impianto</span><span class="l-en">let's talk about your cell</span> <span class="arrow" aria-hidden="true">↗</span></a>
+    <ul class="links mono">
+      <li><a href="https://www.linkedin.com/in/matteo-capitano-5b0aa3318/" target="_blank" rel="noopener">LinkedIn ↗</a></li>
+      <li><a href="mailto:matticapitano80@gmail.com">Email ↗</a></li>
+    </ul>
+    <div class="marquee marquee--mail" aria-hidden="true">
+      <div class="marquee-track">
+        <ul><li>matticapitano80@gmail.com</li><li>matticapitano80@gmail.com</li><li>matticapitano80@gmail.com</li></ul>
+        <ul><li>matticapitano80@gmail.com</li><li>matticapitano80@gmail.com</li><li>matticapitano80@gmail.com</li></ul>
+      </div>
+    </div>
+    <p class="fineprint mono">© <span id="year">2026</span> Matteo Capitano · <span class="l-it">fatto a mano, senza teach pendant</span><span class="l-en">handmade, no teach pendant needed</span></p>
+  </footer>
+
+  <script src="main.js" defer></script>
+</body>
+</html>
