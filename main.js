@@ -107,7 +107,8 @@
 (() => {
   const slots = [...document.querySelectorAll(".slot[data-set]")];
   const names = [...new Set(slots.flatMap(s => s.dataset.set.split(" ")))];
-  names.forEach(n => { const i = new Image(); i.src = `assets/gif/${n}.gif`; });   // precarico: niente vuoti al cambio
+  // precarico le altre GIF solo dopo il caricamento della pagina, così non rallentano l'apertura
+  window.addEventListener("load", () => setTimeout(() => names.forEach(n => { const i = new Image(); i.src = `assets/gif/${n}.gif`; }), 1500));
   if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
   slots.forEach((slot, i) => {
     const set = slot.dataset.set.split(" ");
@@ -271,7 +272,7 @@
   requestAnimationFrame(loop);
 })();
 
-/* ===== Strisce di immagini e video: loop continuo, pausa al passaggio, trascinabili ===== */
+/* ===== Strisce di immagini e video: loop lento, pausa al passaggio, trascinabili con inerzia ===== */
 (() => {
   const strips = [...document.querySelectorAll(".shots")];
   if (!strips.length) return;
@@ -283,17 +284,25 @@
     track.className = "shots-track";
     while (strip.firstChild) track.appendChild(strip.firstChild);
     strip.appendChild(track);
+    const items = [...track.children];
+    items.forEach((it, i) => (it.dataset.idx = i));          // serve al visualizzatore anche sulle copie
     const loop = !strip.querySelector("video");             // i video non si clonano: troppi lettori bloccano i telefoni
-    return { strip, track, loop, items: [...track.children], x: 0, copyW: 0, maxX: 0, visible: false, hover: false, drag: null, moved: 0 };
+    return { strip, track, loop, items, x: 0, v: 0, copyW: 0, maxX: 0, visible: false, hover: false, drag: null, moved: 0 };
+  });
+  window.__strips = states;                                 // usato dal visualizzatore
+  // niente "trascina e rilascia" nativo di link e immagini: interrompeva il trascinamento
+  strips.forEach(s => {
+    s.querySelectorAll("a, img").forEach(el => el.setAttribute("draggable", "false"));
+    s.addEventListener("dragstart", e => e.preventDefault());
   });
   if (reduced) { strips.forEach(s => s.classList.add("is-static")); return; }
 
   function setup(st) {
+    if (st.drag) return;                                    // mai ricostruire mentre si trascina
     st.track.querySelectorAll("[data-clone]").forEach(c => c.remove());
     if (!st.loop) { st.maxX = Math.max(0, st.track.scrollWidth - st.strip.clientWidth); st.copyW = 1; return; }
-    const first = st.items[0];
-    if (!first) return;
-    const gap = parseFloat(getComputedStyle(st.track).columnGap) || 12;
+    if (!st.items[0]) return;
+    const gap = parseFloat(getComputedStyle(st.track).columnGap) || 6;
     const copyW = st.items.reduce((w, it) => w + it.getBoundingClientRect().width + gap, 0);
     if (!copyW) return;
     const copies = Math.max(1, Math.ceil((st.strip.clientWidth + copyW) / copyW));
@@ -313,22 +322,48 @@
   const io = new IntersectionObserver(es => es.forEach(e => {
     const st = states.find(s => s.strip === e.target); if (st) st.visible = e.isIntersecting;
   }), { rootMargin: "100px 0px" });
+
   states.forEach(st => {
     io.observe(st.strip);
     const s = st.strip;
-    if (fine) { s.addEventListener("pointerenter", () => (st.hover = true)); s.addEventListener("pointerleave", () => (st.hover = false)); }
+    if (fine) { s.addEventListener("pointerenter", () => (st.hover = true)); s.addEventListener("pointerleave", () => { if (!st.drag) st.hover = false; }); }
     s.addEventListener("pointerdown", e => {
-      st.drag = { id: e.pointerId, sx: e.clientX, x0: st.x }; st.moved = 0;
-      try { s.setPointerCapture(e.pointerId); } catch (_) {} s.classList.add("is-dragging");
+      if (e.button !== 0) return;
+      if (e.pointerType === "mouse") e.preventDefault();     // niente selezione del testo né trascinamento nativo
+      st.drag = { id: e.pointerId, sx: e.clientX, x0: st.x, lx: e.clientX, lt: performance.now() };
+      st.moved = 0; st.v = 0;
+      try { s.setPointerCapture(e.pointerId); } catch (_) {}
+      s.classList.add("is-dragging");
     });
     s.addEventListener("pointermove", e => {
-      if (!st.drag || e.pointerId !== st.drag.id) return;
-      const dx = e.clientX - st.drag.sx; st.moved = Math.max(st.moved, Math.abs(dx));
-      st.x = st.drag.x0 + dx;
+      const d = st.drag;
+      if (!d || e.pointerId !== d.id) return;
+      const dx = e.clientX - d.sx;
+      st.moved = Math.max(st.moved, Math.abs(dx));
+      st.x = d.x0 + dx;
+      const now = performance.now(), dt = Math.max(1, now - d.lt);
+      st.v = 0.8 * st.v + 0.2 * ((e.clientX - d.lx) / dt) * 1000;   // velocità in px/s, smussata
+      d.lx = e.clientX; d.lt = now;
     });
-    const end = () => { st.drag = null; s.classList.remove("is-dragging"); };
-    s.addEventListener("pointerup", end); s.addEventListener("pointercancel", end);
+    const end = e => {
+      if (!st.drag || (e && e.pointerId !== undefined && e.pointerId !== st.drag.id)) return;
+      st.drag = null;
+      s.classList.remove("is-dragging");
+      if (!s.matches(":hover")) st.hover = false;
+    };
+    s.addEventListener("pointerup", end);
+    s.addEventListener("pointercancel", end);
+    s.addEventListener("lostpointercapture", end);
     s.addEventListener("click", e => { if (st.moved > 6) { e.preventDefault(); e.stopPropagation(); } }, true);  // trascinare non apre le foto
+    // tastiera: frecce sinistra/destra spostano di un elemento; con il focus la striscia si ferma
+    s.addEventListener("focus", () => (st.hover = true));
+    s.addEventListener("blur", () => (st.hover = false));
+    s.addEventListener("keydown", e => {
+      if (e.key !== "ArrowLeft" && e.key !== "ArrowRight") return;
+      e.preventDefault();
+      const step = (st.items[0] ? st.items[0].getBoundingClientRect().width : 300) + 6;
+      st.x += e.key === "ArrowLeft" ? step : -step;
+    });
   });
 
   let last = performance.now();
@@ -337,17 +372,114 @@
     const dt = Math.min(0.05, (now - last) / 1000); last = now;
     for (const st of states) {
       if (!st.visible || !st.copyW) continue;
-      if (!st.loop) {                                       // striscia ferma: solo trascinamento, entro i bordi
-        st.x = Math.min(0, Math.max(-st.maxX, st.x));
-        st.track.style.transform = `translate3d(${st.x.toFixed(1)}px, 0, 0)`;
-        continue;
+      if (!st.drag) {
+        if (Math.abs(st.v) > 5) { st.x += st.v * dt; st.v *= Math.exp(-dt * 5); }   // inerzia dopo il rilascio
+        else { st.v = 0; if (st.loop && !st.hover) st.x -= SPEED * dt; }
       }
-      if (!st.drag && !st.hover) st.x -= SPEED * dt;
-      while (st.x <= -st.copyW) { st.x += st.copyW; if (st.drag) st.drag.x0 += st.copyW; }
-      while (st.x > 0) { st.x -= st.copyW; if (st.drag) st.drag.x0 -= st.copyW; }
+      if (!st.loop) {
+        const cl = Math.min(0, Math.max(-st.maxX, st.x));
+        if (cl !== st.x) { st.x = cl; st.v = 0; if (st.drag) st.drag.x0 = st.x - (st.drag.lx - st.drag.sx); }
+      } else {
+        while (st.x <= -st.copyW) { st.x += st.copyW; if (st.drag) st.drag.x0 += st.copyW; }
+        while (st.x > 0) { st.x -= st.copyW; if (st.drag) st.drag.x0 -= st.copyW; }
+      }
       st.track.style.transform = `translate3d(${st.x.toFixed(1)}px, 0, 0)`;
     }
   })(last);
+})();
+
+/* ===== Visualizzatore: foto e video a schermo intero nella stessa pagina ===== */
+(() => {
+  const strips = window.__strips || [];
+  if (!strips.length) return;
+  const lang = () => document.documentElement.lang === "en";
+  const lb = document.createElement("div");
+  lb.className = "lb"; lb.hidden = true;
+  lb.setAttribute("role", "dialog"); lb.setAttribute("aria-modal", "true");
+  lb.innerHTML = '<button type="button" class="lb-btn lb-close">×</button><button type="button" class="lb-btn lb-prev">‹</button><figure class="lb-fig"></figure><button type="button" class="lb-btn lb-next">›</button><p class="lb-count"></p>';
+  document.body.appendChild(lb);
+  const fig = lb.querySelector(".lb-fig"), count = lb.querySelector(".lb-count");
+  const bClose = lb.querySelector(".lb-close"), bPrev = lb.querySelector(".lb-prev"), bNext = lb.querySelector(".lb-next");
+  const small = matchMedia("(max-width: 760px)").matches;
+  let cur = null, idx = 0, opener = null;
+
+  function show() {
+    const it = cur.items[idx];
+    const a = it.querySelector("a.mframe"), v = it.querySelector("video");
+    fig.innerHTML = "";
+    if (v) {
+      const nv = document.createElement("video");
+      Object.assign(nv, { muted: true, loop: true, playsInline: true, autoplay: true, controls: true });
+      nv.setAttribute("playsinline", ""); nv.setAttribute("muted", "");
+      nv.poster = v.poster;
+      nv.src = small ? v.dataset.src.replace(/\.mp4$/, "-sm.mp4") : v.dataset.src;
+      fig.appendChild(nv); nv.play().catch(() => {});
+    } else if (a) {
+      const img = document.createElement("img");
+      const src = a.querySelector("img");
+      img.src = a.getAttribute("href"); img.alt = src ? src.alt : "";
+      fig.appendChild(img);
+    }
+    count.textContent = `${idx + 1} / ${cur.items.length}`;
+    const many = cur.items.length > 1;
+    bPrev.hidden = bNext.hidden = !many;
+  }
+  function open(st, i, from) {
+    cur = st; idx = i; opener = from;
+    bClose.setAttribute("aria-label", lang() ? "Close" : "Chiudi");
+    bPrev.setAttribute("aria-label", lang() ? "Previous" : "Precedente");
+    bNext.setAttribute("aria-label", lang() ? "Next" : "Successiva");
+    lb.setAttribute("aria-label", lang() ? "Enlarged media" : "Contenuto ingrandito");
+    show();
+    lb.hidden = false;
+    document.documentElement.classList.add("lb-open");
+    requestAnimationFrame(() => lb.classList.add("is-in"));
+    bClose.focus({ preventScroll: true });
+    strips.forEach(s => (s.hover = true));                  // le strisce si fermano dietro
+  }
+  function close() {
+    lb.classList.remove("is-in");
+    document.documentElement.classList.remove("lb-open");
+    fig.innerHTML = "";
+    lb.hidden = true;
+    strips.forEach(s => (s.hover = false));
+    if (opener) opener.focus({ preventScroll: true });
+  }
+  const go = d => { idx = (idx + d + cur.items.length) % cur.items.length; show(); };
+
+  strips.forEach(st => {
+    st.strip.addEventListener("click", e => {
+      const it = e.target.closest(".mitem");
+      if (!it || !st.strip.contains(it)) return;
+      e.preventDefault();
+      open(st, +it.dataset.idx || 0, st.strip);
+    });
+  });
+  bClose.addEventListener("click", close);
+  bPrev.addEventListener("click", () => go(-1));
+  bNext.addEventListener("click", () => go(1));
+  lb.addEventListener("click", e => { if (e.target === lb || e.target === fig) close(); });
+  document.addEventListener("keydown", e => {
+    if (lb.hidden) return;
+    if (e.key === "Escape") close();
+    else if (e.key === "ArrowLeft") go(-1);
+    else if (e.key === "ArrowRight") go(1);
+    else if (e.key === "Tab") {                              // il focus resta dentro il visualizzatore
+      const f = [...lb.querySelectorAll("button:not([hidden]), video")];
+      const i = f.indexOf(document.activeElement);
+      e.preventDefault();
+      f[(i + (e.shiftKey ? -1 : 1) + f.length) % f.length].focus();
+    }
+  });
+  // scorrimento della pagina bloccato mentre è aperto; swipe per cambiare su touch
+  ["wheel", "touchmove"].forEach(t => lb.addEventListener(t, e => { e.stopPropagation(); if (t === "wheel") e.preventDefault(); }, { passive: false }));
+  let sx = null;
+  lb.addEventListener("pointerdown", e => { sx = e.clientX; });
+  lb.addEventListener("pointerup", e => {
+    if (sx === null) return;
+    const dx = e.clientX - sx; sx = null;
+    if (Math.abs(dx) > 50 && cur.items.length > 1) go(dx < 0 ? 1 : -1);
+  });
 })();
 
 /* ===== Video: si caricano e partono solo quando sono visibili ===== */
@@ -371,4 +503,15 @@
     }
   }, { rootMargin: "200px 0px" });
   vids.forEach(v => io.observe(v));
+})();
+
+/* ===== Statistiche delle visite senza cookie (GoatCounter), attive solo se il codice è impostato ===== */
+(() => {
+  const code = (document.querySelector('meta[name="goatcounter"]') || {}).content;
+  if (!code || location.hostname === "localhost") return;
+  const sc = document.createElement("script");
+  sc.async = true;
+  sc.dataset.goatcounter = `https://${code}.goatcounter.com/count`;
+  sc.src = "https://gc.zgo.at/count.js";
+  document.head.appendChild(sc);
 })();

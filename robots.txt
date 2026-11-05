@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+Disallow: /cv/
+
+Sitemap: https://neessuno.github.io/sitemap.xml
